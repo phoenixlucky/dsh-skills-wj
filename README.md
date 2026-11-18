@@ -2,15 +2,18 @@
 
 版本化的 DeepSeek Harness skill 源目录：既是一个可浏览、可编辑的普通文件夹，又是一个可随版本发布的 DSH bundle。
 
-- 仓库：<https://github.com/phoenixlucky/dsh-skills-wj>（公开）
-- 当前版本：**1.0.0**
-- 许可：MIT
+| | |
+| --- | --- |
+| 仓库 | <https://github.com/phoenixlucky/dsh-skills-wj>（公开） |
+| 版本 | `1.0.0`（[Release v1.0.0](https://github.com/phoenixlucky/dsh-skills-wj/releases/tag/v1.0.0)） |
+| 许可 | MIT |
+| 最近更新 | 2026-11-18 |
 
 ## 包含的 skill
 
-| skill | 用途 |
-| --- | --- |
-| `zuowang-skill` | 多轮任务中的上下文取舍。重新锚定当前目标，把先前上下文分成「生效 / 被取代 / 未结 / 噪声」四类，压缩时从低价值往上丢，避免把最新一句话当成全部事实。 |
+| skill | 触发场景 | 作用 |
+| --- | --- | --- |
+| `zuowang-skill` | 多轮任务带着前文：接着做之前的事、按更正改口径、依赖先前的决定或未结事项、旧细节已经比当前任务还多 | 重新锚定当前目标，把前文分成「生效 / 被取代 / 未结 / 噪声」四类，按类型而非新旧解决冲突，压缩时从低价值往上丢 |
 
 ## 结构
 
@@ -20,44 +23,62 @@ cordis.patch.yml         挂载层：host 级 skill-filesystem（bundledSkillDir
 package.json             dsh.bundle 声明，使这个仓库可以作为 profile 的一个 bundle 被安装
 ```
 
-## 使用
+## 安装与更新
 
-**加一个 skill**：在 `skills/` 下建 `<name>/SKILL.md`，frontmatter 必须有 `name`（kebab-case）与 `description`；提交即可。运行中的会话会被文件监视器热发现，无需重启。
+### 方式一：作为 bundle 安装（推荐）
 
-**取用**（两种，二者择一）：
+```sh
+git clone https://github.com/phoenixlucky/dsh-skills-wj.git
+dsh plugin --profile desktop add file:<克隆目录>
+```
 
-1. 当前方式 —— profile 的 `cordis.patch.yml` 里显式两行：
+安装后确认 profile 的 `package.json` 同时出现依赖与 bundles 条目：
 
-   ```yaml
-   - id: skill-filesystem
-     name: '@deepseek-ai/dsh-skill-filesystem'
-     disabled: false
-     config:
-       bundledSkillDir: '<本仓库检出路径>/skills'
-   - id: tool-skill
-     name: '@deepseek-ai/dsh-tool-skill'
-     disabled: false
-   ```
+```json
+"dependencies": { "@tinyforge/dsh-skills-wj": "file:<克隆目录>" },
+"dsh": { "profile": { "bundles": ["...", "@tinyforge/dsh-skills-wj"] } }
+```
 
-   仓库内的 `cordis.patch.yml` 保留的是维护者本机的绝对路径，其他机器请改成自己的检出路径。
+更新：在克隆目录 `git pull`，新会话即读到新内容；若某个 skill 的 frontmatter 改了名，重启 DSH 最稳妥。
 
-2. 版本化方式 —— 把本仓库作为 bundle 安装进 profile，profile 里只留包名，不再手写上面两行：
+### 方式二：只在 profile 里挂目录（不装 bundle）
 
-   ```sh
-   git clone https://github.com/phoenixlucky/dsh-skills-wj.git
-   dsh plugin --profile desktop add file:<克隆目录>
-   ```
+profile 的 `cordis.patch.yml` 里显式两行：
 
-   安装后确认 profile 的 `package.json` 同时出现依赖与 bundles 条目：
+```yaml
+- id: skill-filesystem
+  name: '@deepseek-ai/dsh-skill-filesystem'
+  disabled: false
+  config:
+    bundledSkillDir: '<本仓库检出路径>/skills'
+- id: tool-skill
+  name: '@deepseek-ai/dsh-tool-skill'
+  disabled: false
+```
 
-   ```json
-   "dependencies": { "@tinyforge/dsh-skills-wj": "file:<克隆目录>" },
-   "dsh": { "profile": { "bundles": ["...", "@tinyforge/dsh-skills-wj"] } }
-   ```
+仓库内的 `cordis.patch.yml` 保留的是维护者本机的绝对路径，其他机器请改成自己的检出路径。
 
-## 版本
+## 写一个新 skill
 
-语义化版本。`1.0.0` 为首个稳定版本：目录布局（`skills/<name>/SKILL.md`）、bundle 挂载方式与 `package.json` 的 `dsh.bundle` 声明自此保持不变；新增 skill 走次版本号，破坏上述约定的改动走主版本号。
+在 `skills/` 下建 `<name>/SKILL.md`，frontmatter 必须有 `name`（kebab-case）与 `description`（写成“什么时候该用它”，而不是“它是什么”）。运行中的会话会被文件监视器热发现，无需重启。新增 skill 是次版本号变更。
+
+## 示例：`zuowang-skill` 的输出形态
+
+该 skill 默认不输出上下文总结，只在“下一步依赖前文、而最近几轮已看不清”时给三行：
+
+```
+Goal: <当前要做的事，一行>
+Binding: <仍然生效的约束、决定、被更正的事实>
+Next: <未结事项或下一步>
+```
+
+它不删历史、不写记忆；判断只作用于当前对话里的注意力分配。
+
+## 版本与变更
+
+语义化版本。`1.0.0` 起以下约定保持不变：目录布局 `skills/<name>/SKILL.md`、bundle 挂载方式、`package.json` 的 `dsh.bundle` 声明。新增 skill 走次版本号，破坏上述约定的改动走主版本号。
+
+- **1.0.0**（2026-11-18）首个稳定版本：`zuowang-skill` 定稿；补齐 README 与 MIT 许可证；发布到公开仓库并打 `v1.0.0` Release。
 
 ## 优先级
 
