@@ -1,6 +1,6 @@
 {
   "name": "@tinyforge/dsh-skills-wj",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Versioned DeepSeek Harness skill root: mounts this package's skills/ directory as a bundled skill root and enables the skill loader at the host plane.",
   "license": "MIT",
   "repository": {
@@ -19,6 +19,9 @@
     "skills",
     "README.md"
   ],
+  "scripts": {
+    "check:skills": "node scripts/check-skills.mjs"
+  },
   "engines": {
     "dsh": ">=0.2.2-rc.1 <0.3.0-0"
   },

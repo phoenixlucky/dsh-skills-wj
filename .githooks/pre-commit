@@ -1,0 +1,5 @@
+#!/bin/sh
+# Blocks a commit that would break the skill catalog: a missing or malformed
+# official SKILL.md removes all 14 official skills at once when the profile mounts
+# them through assetRoot. Enable with: git config core.hooksPath .githooks
+node scripts/check-skills.mjs || exit 1

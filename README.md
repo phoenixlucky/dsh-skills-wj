@@ -107,6 +107,22 @@ Next: <未结事项或下一步>
 - **1.0.0**（2026-11-18）首个稳定版本：`zuowang-skill` 定稿；补齐 README 与 MIT 许可证；发布到公开仓库并打 `v1.0.0` Release。
 - **1.1.0**（2026-11-18）统一管理：`chrome-extensions`、`modern-web-guidance` 迁入 `skills/`（原用户目录副本已删除）；新增 `official/` 镜像官方 14 个 skill，profile 用 `assetRoot` 指过来，保留 Settings 开关与 Figma 更新通道；README 补目录结构、同步步骤与"任一文件缺失会让 14 个一起消失"的风险说明。
 
+## 提交前自检
+
+`scripts/check-skills.mjs` 在重启前替你拦住"一份坏、全灭"：
+
+```powershell
+node scripts/check-skills.mjs
+```
+
+它检查 `official/` 是否正好覆盖官方提供方会读的 14 个目录、每个 `SKILL.md` 是否有合法的 `name`（kebab-case、与目录同名）与 `description`、`figma-design-skill/references/` 是否在位，并校验 `skills/` 里的个人 skill、以及两者是否重名。`FAIL` 一律先修再重启；`warn` 不影响加载。
+
+让它自动跑（一次即可）：
+
+```powershell
+git config core.hooksPath .githooks
+```
+
 ## 优先级
 
 内置/打包根 rank 600；用户目录 `~/.dsh/skills` 为 400，同名 skill 会被用户目录**覆盖**（数字小者胜）。需要某个 skill 临时压过版本源时，放进用户目录即可。
