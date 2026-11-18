@@ -1,0 +1,19 @@
+# Bundle layer for the versioned skill root.
+#
+# Both rows are host-plane (global skill layer), so every agent preset sees the
+# catalog these skills belong to, whether or not that preset mounts its own
+# local discovery. Paths are absolute because this package is installed from a
+# checkout; swap in the portable form when the package is published and its own
+# directory must be resolved at runtime:
+#
+#   bundledSkillDir: !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('@tinyforge/dsh-skills-wj/package.json')), 'skills')
+
+- id: skill-filesystem
+  name: '@deepseek-ai/dsh-skill-filesystem'
+  disabled: false
+  config:
+    bundledSkillDir: 'E:/home/dsh-skills-wj/skills'
+
+- id: tool-skill
+  name: '@deepseek-ai/dsh-tool-skill'
+  disabled: false
