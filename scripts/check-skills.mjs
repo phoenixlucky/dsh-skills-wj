@@ -3,9 +3,10 @@
  * Validate every skill document in this repository before it reaches a running Harness.
  *
  * `@deepseek-ai/dsh-skill-official` parses its whole catalog in one pass, so a single
- * missing or malformed file removes all 14 skills at once. This check runs ahead of that:
- * it compares `official/` with the directory names the provider reads, and it verifies
- * the frontmatter each provider needs. Exit code 1 means do not restart, do not ship.
+ * missing or malformed file removes the entire official catalog at once. This check runs
+ * ahead of that: it verifies `official/` holds exactly the catalog the provider reads and
+ * that every SKILL.md carries the frontmatter each provider needs. Exit code 1 means do
+ * not restart, do not ship.
  */
 
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
@@ -17,7 +18,8 @@ const OFFICIAL_ROOT = join(ROOT, 'official')
 const SKILLS_ROOT = join(ROOT, 'skills')
 
 /** Directory names the official provider reads, mirroring its `SKILL_DIRS`. */
-const WJ_FORGE = [
+const OFFICIAL_SKILLS = [
+  'figma-design-skill',
   'bug-hunt',
   'code-review',
   'github',
@@ -107,18 +109,9 @@ function checkSkillFile(path, expected) {
 if (!existsSync(OFFICIAL_ROOT)) {
   errors.push('official/: directory is missing, so the official provider has no catalog to read')
 } else {
-  for (const name of WJ_FORGE) checkSkillFile(join(OFFICIAL_ROOT, 'wj-forge', name, 'SKILL.md'), name)
-  checkSkillFile(join(OFFICIAL_ROOT, FIGMA, 'SKILL.md'), FIGMA)
-
-  const expected = new Set([...WJ_FORGE, FIGMA])
-  const wjForgeDir = join(OFFICIAL_ROOT, 'wj-forge')
-  if (existsSync(wjForgeDir)) {
-    for (const entry of readdirSync(wjForgeDir)) {
-      if (!expected.has(entry)) warnings.push(`official/wj-forge/${entry}: not read by the provider, kept as an unlisted directory`)
-    }
-  }
+  for (const name of OFFICIAL_SKILLS) checkSkillFile(join(OFFICIAL_ROOT, name, 'SKILL.md'), name)
   for (const entry of readdirSync(OFFICIAL_ROOT)) {
-    if (entry !== 'wj-forge' && entry !== FIGMA) warnings.push(`official/${entry}: unexpected entry beside the catalog`)
+    if (!OFFICIAL_SKILLS.includes(entry)) warnings.push(`official/${entry}: unexpected entry beside the catalog`)
   }
   const references = join(OFFICIAL_ROOT, FIGMA, 'references')
   if (!existsSync(references)) warnings.push('official/figma-design-skill/references: missing, the Figma skill links into it')
@@ -144,7 +137,7 @@ for (const warning of warnings) console.warn(`warn  ${warning}`)
 for (const error of errors) console.error(`FAIL  ${error}`)
 
 if (errors.length > 0) {
-  console.error(`\n${errors.length} problem(s) found. Fix them before restarting: a broken official file removes all 14 skills at once.`)
+  console.error(`\n${errors.length} problem(s) found. Fix them before restarting: a broken official file removes the whole official catalog at once.`)
   process.exitCode = 1
 } else {
   console.log(`OK  ${seen.size} skill document(s) valid${warnings.length > 0 ? `, ${warnings.length} warning(s)` : ''}`)

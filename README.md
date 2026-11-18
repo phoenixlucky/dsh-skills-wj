@@ -1,42 +1,105 @@
 # dsh-skills-wj
 
-版本化的 DeepSeek Harness skill 源目录：既是一个可浏览、可编辑的普通文件夹，又是一个可随版本发布的 DSH bundle。
+版本化的 DeepSeek Harness skill 源目录：`official/` 放官方目录条目（当前 1 个：`figma-design-skill`），`skills/` 放自有与引入的 skill，整仓库可作为一个 DSH bundle 安装。
 
 | | |
 | --- | --- |
 | 仓库 | <https://github.com/phoenixlucky/dsh-skills-wj>（公开） |
-| 版本 | `1.1.0` |
-| 许可 | MIT |
+| 包 | npm [`@tinyforge/dsh-skills-wj`](https://www.npmjs.com/package/@tinyforge/dsh-skills-wj) |
+| 版本 | `1.2.0` |
+| 许可 | 自有内容 MIT；`figma-design-skill` 上游 MIT；`chrome-extensions`、`modern-web-guidance` 上游 Apache-2.0（GoogleChrome/modern-web-guidance） |
 | 最近更新 | 2026-11-18 |
-
-## 包含的 skill
-
-| skill | 触发场景 | 作用 |
-| --- | --- | --- |
-| `zuowang-skill` | 多轮任务带着前文：接着做之前的事、按更正改口径、依赖先前的决定或未结事项、旧细节已经比当前任务还多 | 重新锚定当前目标，把前文分成「生效 / 被取代 / 未结 / 噪声」四类，按类型而非新旧解决冲突，压缩时从低价值往上丢 |
-| `chrome-extensions` | 写、改、调试、发布 Chrome 扩展（Manifest V3、content script、service worker、side panel、chrome.* API） | 按 MV3 最佳实践给出结构、权限、调试与上架流程 |
-| `modern-web-guidance` | HTML/CSS 与客户端 JS 任务（弹层、表格、深色模式、容器查询、view transitions、表单、可访问性、CWV 等） | 可检索的现代 Web 实践库，先查再写，避免用过时 API |
-
-`official/` 下是官方 14 个 skill 的镜像（`bug-hunt`、`code-review`、`figma-design-skill`、`github`、`moon-lovers`、`officecli`、`ponytail`、`release-notes`、`superpowers`、`taste-skill`、`ui-ux-pro-max`、`vision-liao-memory`、`weiliaozi-skill`、`zerotoken-skill`），内容随 DSH 上游同步，不在 `skills/` 里。
 
 ## 结构
 
 ```
-skills/<name>/SKILL.md   个人 skill（每个目录一个，直接增删）
-official/                官方内置 14 个 skill 的正文镜像（assetRoot 指向这里）
-cordis.patch.yml         挂载层：host 级 skill-filesystem（bundledSkillDir 指向 skills/）+ tool-skill
-package.json             dsh.bundle 声明，使这个仓库可以作为 profile 的一个 bundle 被安装
-MEMORY.md                工作记忆文件，不是 skill，不参与扫描
+official/                        官方目录：由 @deepseek-ai/dsh-skill-official 读取（14 个，平铺）
+  figma-design-skill/            SKILL.md（v2.16.0）+ references/ 3 篇（自带 LICENSE、source-url）
+  <name>/SKILL.md                其余 13 个是 8 行摘要条（frontmatter + 一段摘要 + source-url）
+skills/                          bundle 根：SKILL.md + 可选 references/、guides/
+  zuowang-skill/                 自有
+  chrome-extensions/             外部引入（SKILL.md + 19 篇 references/extensions + 4 篇 webstore）
+  modern-web-guidance/           外部引入（SKILL.md + 209 篇 guides/**）
+scripts/check-skills.mjs         提交前校验：缺文件、缺 frontmatter、name 与目录不符、重名
+.githooks/pre-commit             调用上面的校验，坏文件不许进仓库
+cordis.patch.yml                 挂载层：host 级 skill-filesystem（bundledSkillDir 指向 skills/）+ tool-skill
+package.json                     dsh.bundle 声明与 check:skills 脚本
 ```
+
+## 两个根的分工
+
+| | `official/` | `skills/` |
+| --- | --- | --- |
+| 谁读 | `@deepseek-ai/dsh-skill-official`（通过 assetRoot） | `@deepseek-ai/dsh-skill-filesystem` 的 `bundledSkillDir` |
+| 数量 | 当前 14 个（平铺，无子分组） | 当前 3 个，可随时增删 |
+| 能否改名/移动 | 不能。目录名即 provider 的 `SKILL_DIRS` | 可以，目录名与 frontmatter `name` 保持一致即可 |
+| 来源 | 上游镜像，改动应回到上游仓库 | 本仓库自有或明确引入 |
+
+## `official/` 的 14 个 skill
+
+其中 13 个是**摘要条**（8 行：frontmatter + 一段摘要，带 `source-url` 指回上游），不携带上游全文、没有 `version` 字段；只有 `figma-design-skill` 是完整正文并标注 `version`。
+
+| skill | 来源 | 上游版本 | 上游更新 | 本地 |
+| --- | --- | --- | --- | --- |
+| `figma-design-skill` | [phoenixlucky/figma-design-skill](https://github.com/phoenixlucky/figma-design-skill) | **2.16.0** | 2026-10-15 | 已同步（正文 411 行 + references 208 / 211 / 228 行） |
+| `bug-hunt` | [anthropics/skills](https://github.com/anthropics/skills)（来源存疑） | 无 tag | 2026-11-16 | 摘要条 |
+| `code-review` | [anthropics/skills](https://github.com/anthropics/skills)（来源存疑） | 无 tag | 2026-11-16 | 摘要条 |
+| `release-notes` | [anthropics/skills](https://github.com/anthropics/skills)（来源存疑） | 无 tag | 2026-11-16 | 摘要条 |
+| `superpowers` | [obra/superpowers](https://github.com/obra/superpowers) | **v7.0.2** | 2026-11-04 | 摘要条 |
+| `ponytail` | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | **v5.3.3** | 2026-10-29 | 摘要条 |
+| `taste-skill` | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) | **v2.5.1** | 2026-11-07 | 摘要条 |
+| `ui-ux-pro-max` | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | **v2.15.0** | 2026-11-16 | 摘要条 |
+| `officecli` | [iOfficeAI/OfficeCLI](https://github.com/iOfficeAI/OfficeCLI) | **v1.0.162** | 2026-11-17 | 摘要条 |
+| `vision-liao-memory` | [topoteretes/cognee](https://github.com/topoteretes/cognee) | 无 tag | 2026-11-16 | 摘要条 |
+| `github` | [clawhub.ai/steipete/github](https://clawhub.ai/steipete/github) | 无版本号 | 2026-06-17 | 摘要条 |
+| `moon-lovers` | [phoenixlucky/moon-lovers-skill](https://github.com/phoenixlucky/moon-lovers-skill) | **v1.4.5** | 2026-06-18 | 摘要条 |
+| `zerotoken-skill` | [phoenixlucky/zerotoken-skill](https://github.com/phoenixlucky/zerotoken-skill) | **v1.17.0** | 2026-10-16 | 摘要条 |
+| `weiliaozi-skill` | [phoenixlucky/weiliaozi-skill](https://github.com/phoenixlucky/weiliaozi-skill) | **v2.2.1** | 2026-09-24 | 摘要条 |
+
+## `skills/` 的 3 个 skill
+
+| skill | 来源 | 版本 | 上游更新 | 本地 |
+| --- | --- | --- | --- | --- |
+| `zuowang-skill` | [phoenixlucky/zuowang-skill](https://github.com/phoenixlucky/zuowang-skill) | 无版本号（rev `88c6963`） | 2026-11-17 | 与上游一致 |
+| `chrome-extensions` | [GoogleChrome/modern-web-guidance](https://github.com/GoogleChrome/modern-web-guidance) · `skills/chrome-extensions` | 仓库 tag **v1.0.1** | 2026-11-16 | 与上游一致 |
+| `modern-web-guidance` | 同上 · `skills/modern-web-guidance` | **`2026_11_09-5bcc021b`**（skill 内版本标识） | 2026-11-16 | 与上游一致（17 个 guides 主题） |
+
+## 提交前校验
+
+任何 SKILL.md 的缺失或格式错误都会让整份目录解析失败，所以改完先跑校验再交付：
+
+```sh
+npm run check:skills      # 等价于 node scripts/check-skills.mjs
+```
+
+校验内容：文件存在、能读到 YAML frontmatter、`name` 为 kebab-case 且与目录名一致、`description` 非空、全仓库无重名；`official/` 里多出或缺少目录只报警告，`skills/` 下没有 SKILL.md 的目录也会提示。
+
+启用提交钩子（一次即可）：
+
+```sh
+git config core.hooksPath .githooks
+```
+
+退出码非 0 表示不要重启、不要发布。
 
 ## 安装与更新
 
 ### 方式一：作为 bundle 安装（推荐）
 
+从 npm 装（不落源码树）：
+
+```sh
+dsh plugin --profile desktop add @tinyforge/dsh-skills-wj
+```
+
+或从 git 装（能拿到 `official/`、`scripts/`、`.githooks/`）：
+
 ```sh
 git clone https://github.com/phoenixlucky/dsh-skills-wj.git
 dsh plugin --profile desktop add file:<克隆目录>
 ```
+
+npm 包里只有 `cordis.patch.yml` + `skills/` + `README.md`（即 `package.json` 的 `files`），因为 bundle 只挂 `skills/`；`official/` 由官方 provider 自己按 assetRoot 读，不需要随包分发。
 
 安装后确认 profile 的 `package.json` 同时出现依赖与 bundles 条目：
 
@@ -45,11 +108,9 @@ dsh plugin --profile desktop add file:<克隆目录>
 "dsh": { "profile": { "bundles": ["...", "@tinyforge/dsh-skills-wj"] } }
 ```
 
-更新：在克隆目录 `git pull`，新会话即读到新内容；若某个 skill 的 frontmatter 改了名，重启 DSH 最稳妥。
+更新：在克隆目录 `git pull`，新会话即读到新内容；改过 skill 的 frontmatter 名称时重启 DSH 最稳妥。
 
 ### 方式二：只在 profile 里挂目录（不装 bundle）
-
-profile 的 `cordis.patch.yml` 里显式两行：
 
 ```yaml
 - id: skill-filesystem
@@ -62,75 +123,38 @@ profile 的 `cordis.patch.yml` 里显式两行：
   disabled: false
 ```
 
-仓库内的 `cordis.patch.yml` 保留的是维护者本机的绝对路径，其他机器请改成自己的检出路径。
+仓库内的 `cordis.patch.yml` 保留的是维护者本机绝对路径，其他机器请改成自己的检出路径。注意这一行只挂 `skills/`，`official/` 由官方 provider 自己按 assetRoot 读，两者互不影响。
 
-### 官方目录（`official/`）
+## 新增或调整 skill
 
-官方 14 个 skill（13 个 WJ Forge + `figma-design-skill`）的正文也镜像在本仓库，profile 里让官方提供方读这份副本即可——Settings 的逐项开关、Figma 固定源更新通道都保持不变：
-
-```yaml
-- id: official-skills
-  name: '@deepseek-ai/dsh-skill-official'
-  config:
-    assetRoot: '<本仓库检出路径>/official'
-```
-
-目录结构必须与包内 `assets/` 一致：`wj-forge/<name>/SKILL.md` 加 `figma-design-skill/`（含 `references/`）。**任何一份缺 `SKILL.md` 或 frontmatter 非法，都会让整个提供方加载失败、14 个一起消失**——改完先自查文件是否齐全。
-
-DSH 升级后，官方技能可能已更新；不同步就会一直用旧正文：
-
-```powershell
-Copy-Item '<DSH 源码检出>/packages/skill/skill-official/assets/*' '<本仓库>/official/' -Recurse -Force
-git commit -am "sync official catalog"
-```
-
-## 写一个新 skill
-
-在 `skills/` 下建 `<name>/SKILL.md`，frontmatter 必须有 `name`（kebab-case）与 `description`（写成“什么时候该用它”，而不是“它是什么”）。运行中的会话会被文件监视器热发现，无需重启。新增 skill 是次版本号变更。
-
-## 示例：`zuowang-skill` 的输出形态
-
-该 skill 默认不输出上下文总结，只在“下一步依赖前文、而最近几轮已看不清”时给三行：
-
-```
-Goal: <当前要做的事，一行>
-Binding: <仍然生效的约束、决定、被更正的事实>
-Next: <未结事项或下一步>
-```
-
-它不删历史、不写记忆；判断只作用于当前对话里的注意力分配。
+1. `skills/` 下建 `<name>/SKILL.md`：frontmatter 必须有 `name`（kebab-case，与目录同名）与 `description`（写“什么时候该用它”）。
+2. 子资料放同目录（`references/`、`guides/`），SKILL.md 内用相对路径引用。
+3. 跑 `npm run check:skills`，通过后再提交。
+4. `official/` 不要手改：要更新就先改上游仓库，再整体镜像回来。
 
 ## 版本与变更
 
-语义化版本。`1.0.0` 起以下约定保持不变：目录布局 `skills/<name>/SKILL.md`、bundle 挂载方式、`package.json` 的 `dsh.bundle` 声明。新增 skill 走次版本号，破坏上述约定的改动走主版本号。
+语义化版本。`1.0.0` 起以下约定保持不变：`skills/<name>/SKILL.md` 布局、bundle 挂载方式、`package.json` 的 `dsh.bundle` 声明。
 
-- **1.0.0**（2026-11-18）首个稳定版本：`zuowang-skill` 定稿；补齐 README 与 MIT 许可证；发布到公开仓库并打 `v1.0.0` Release。
-- **1.1.0**（2026-11-18）统一管理：`chrome-extensions`、`modern-web-guidance` 迁入 `skills/`（原用户目录副本已删除）；新增 `official/` 镜像官方 14 个 skill，profile 用 `assetRoot` 指过来，保留 Settings 开关与 Figma 更新通道；README 补目录结构、同步步骤与"任一文件缺失会让 14 个一起消失"的风险说明。
+- **1.0.0**（2026-11-18）首个稳定版本：`zuowang-skill` 定稿，README 与 MIT 许可证补齐，发布公开仓库并打 `v1.0.0` Release。
+- **1.1.x**：引入 `official/` 官方目录、`chrome-extensions` 与 `modern-web-guidance`；新增 `scripts/check-skills.mjs` 与 `.githooks/pre-commit`。
+- **1.2.0**（2026-11-18）首个 npm 版本：将 `official/wj-forge/<name>/` 拍平为 `official/<name>/`（14 条全部保留在同一层），`figma-design-skill` 同时由 2.4.2 升级到 **2.16.0**（正文 411 行 + references 208/211/228 行）；`check-skills.mjs` 的 `OFFICIAL_SKILLS` 同步为 14 个平铺目录；`package.json` 新增 `publishConfig`（public）与 `prepublishOnly`（发布前强制跑 `check:skills`）；本机仓库首次接上 `origin`，与网页端建库历史合并后统一推到 `main`。
 
-## 提交前自检
+## 第三方内容与许可
 
-`scripts/check-skills.mjs` 在重启前替你拦住"一份坏、全灭"：
+- `zuowang-skill`：本仓库自有，MIT。
+- `skills/chrome-extensions`、`skills/modern-web-guidance`：来自 <https://github.com/GoogleChrome/modern-web-guidance>（Apache-2.0），本地内容与上游 HEAD 对齐；`modern-web-guidance` 运行时还依赖上游 npm 包检索。
+- `official/figma-design-skill`：来自 <https://github.com/phoenixlucky/figma-design-skill>，MIT，v2.16.0。
+- 其余 13 个 `official/<name>`：摘要条，上游与许可各见其 `source-url`（anthropics/skills、obra/superpowers、DietrichGebert/ponytail、Leonxlnx/taste-skill、nextlevelbuilder/ui-ux-pro-max-skill、iOfficeAI/OfficeCLI、topoteretes/cognee、clawhub.ai/steipete/github 及 phoenixlucky 自有仓库）。
 
-```powershell
-node scripts/check-skills.mjs
-```
-
-它检查 `official/` 是否正好覆盖官方提供方会读的 14 个目录、每个 `SKILL.md` 是否有合法的 `name`（kebab-case、与目录同名）与 `description`、`figma-design-skill/references/` 是否在位，并校验 `skills/` 里的个人 skill、以及两者是否重名。`FAIL` 一律先修再重启；`warn` 不影响加载。
-
-让它自动跑（一次即可）：
-
-```powershell
-git config core.hooksPath .githooks
-```
+仓库根的 `LICENSE` 只覆盖自有内容，不自动覆盖以上第三方部分。
 
 ## 优先级
 
-内置/打包根 rank 600；用户目录 `~/.dsh/skills` 为 400，同名 skill 会被用户目录**覆盖**（数字小者胜）。需要某个 skill 临时压过版本源时，放进用户目录即可。
+内置/打包根 rank 600；用户目录 `~/.dsh/skills` 为 400，同名 skill 会被用户目录**覆盖**（数字小者胜）。要临时压过版本源，放进用户目录即可。
+
+`chrome-extensions`、`modern-web-guidance` 与内置 skill 同名、同为 rank 600 时谁生效未经验证；要确定压过内置版本，放用户目录（400）或改名，别依赖同 rank 的先后。
 
 ## 边界
 
 只放提示词类 skill；需要工具或服务的分发走 plugin，而不是这里。
-
-## 许可
-
-[MIT](./LICENSE)
