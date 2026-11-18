@@ -1,8 +1,13 @@
 {
   "name": "@tinyforge/dsh-skills-wj",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Versioned DeepSeek Harness skill root: mounts this package's skills/ directory as a bundled skill root and enables the skill loader at the host plane.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phoenixlucky/dsh-skills-wj.git"
+  },
+  "homepage": "https://github.com/phoenixlucky/dsh-skills-wj#readme",
   "type": "module",
   "exports": {
     "./cordis.patch.yml": "./cordis.patch.yml",
