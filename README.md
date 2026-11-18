@@ -82,6 +82,28 @@ git config core.hooksPath .githooks
 
 退出码非 0 表示不要重启、不要发布。
 
+## 发布
+
+改完 skill 或说明后按这个顺序走，命令都在仓库根执行：
+
+```sh
+npm run check:skills                          # 1. 校验不过就停
+npm version minor --no-git-tag-version        # 2. 只改 package.json 版本
+#   再手工同步本文件「版本」行与「版本与变更」节
+git add -A && git commit -m "x.y.z: <一句话>"
+git push origin main
+git tag -a vx.y.z -m "x.y.z: <一句话>" && git push origin vx.y.z
+gh release create vx.y.z --title "vx.y.z - <一句话>" --notes-file <说明文件>
+npm publish                                   # 3. prepublishOnly 会再跑一次校验
+```
+
+要点：
+
+- `main` 是唯一发布分支。远端最初是网页端建库（与本地历史无共同祖先），已用 `git merge -s ours --allow-unrelated-histories` 合并过，**不要再强推**。
+- tag 必须与 `package.json` 版本一致；`npm publish` 成功后该版本号只能升不能改。
+- 发布后 `npm view @tinyforge/dsh-skills-wj version` 有 1–5 分钟注册表延迟，此时 404 不代表失败：先看 npm 日志目录里那次 publish 的 `http fetch PUT` 状态码（201/202 即已被接受），再等 packument 生成。
+- 首次发布会自动出现占位版本 `0.0.0-stage`（`"stub": true`，2 个文件），那是 npm 的分阶段发布占位，不是别人发的包，`latest` 指向真实版本。
+
 ## 安装与更新
 
 ### 方式一：作为 bundle 安装（推荐）

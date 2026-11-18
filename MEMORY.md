@@ -31,8 +31,18 @@
 - 配套改动：`scripts/check-skills.mjs` 的 `OFFICIAL_SKILLS` 改为 14 个平铺目录；README 的 official 表、结构图、两个根分工、版本与变更、第三方许可全部按“14 个平铺”重写；figma 仍为 2.16.0。
 - 校验：本轮终端输入突然不再落到窗口（`type_text`/`keypress` 无回显），`node scripts/check-skills.mjs` 未能重跑；改用静态核对——`official/*/SKILL.md` 14 个、目录名与 frontmatter `name` 一一对应、17 份 SKILL.md 均有 description。
 
+- 2026-11-18 第八轮（用户要求：升级版本号、上传 github、发布 npm）：版本 1.1.1 → **1.2.0**；tag `v1.2.0`（annotated `d068d9b` → `d8fd268`）与 GitHub Release `v1.2.0`（Latest）均已创建；npm 首次发布成功，`@tinyforge/dsh-skills-wj@1.2.0` latest，239 文件 / 681 kB / 解包 2.16 MB，shasum `995328b1…` 与本地 `npm pack` 逐位一致。
+- 工具链结论（推翻此前「本会话无 shell 工具」）：`git` 2.56.1（`d:\Program Files\Git\cmd\git.exe`）、`gh` 2.93.0（登录 phoenixlucky，scopes gist / read:org / repo）、`node` v24.19.0、`npm` 11.17.0（登录 ethanwilkins，且为 `@tinyforge` 组织 owner，故 scoped 包可发）。执行方式：wincu 起 PowerShell 窗口（本轮 hwnd 2757578），`type_text` 用 sendinput、`keypress return` 执行，命令输出用 `| Out-File -Encoding utf8` 落到 `.tmp\*.txt` 再用 read 工具读——比截图/OCR 可靠得多；窗口标题会显示当前命令行，可作执行旁证。
+- 本目录**已是 git 仓库**（推翻第六轮「不是」的记录）：本地 6 提交（`fd86a25`…`f08cbe2`），原分支 `master` 且**无 remote**。本轮新增 `.gitignore`（`.tmp/`、`node_modules/`、`*.log`）。
+- 远端 `main` 原是网页端 6 个提交（只含 LICENSE、README、cordis.patch.yml、package.json、skills/zuowang-skill/SKILL.md），与本地**无共同祖先**。处理：`git merge -s ours --allow-unrelated-histories origin/main`（保留网页端历史、树取本地）→ `cedc8dc..d8fd268` **快进推送，未强推**。结论：以后走普通 push，别再强推。
+- `package.json`：加 `publishConfig`（access public + 官方 registry）与 `prepublishOnly`（发前跑 check:skills）；`files` 决策为**不含** `official/`、`scripts/`。发布前 `check:skills` 报 `OK 17 skill document(s) valid`，tarball 239 文件（LICENSE + README + cordis.patch.yml + package.json + skills/**）。
+- npm 两个坑（写进 README「发布」节）：① 首次发布后注册表 GET 会连报 404 数分钟，判据是 npm 日志里 `http fetch PUT https://registry.npmjs.org/… 202`，别据此重发；② 首次发布会自动出现占位版本 `0.0.0-stage`（`stub: true`、2 文件、346 B，"Temporary package placeholder for staged publishing"），不是他人发布的包，`latest` 指向真实版本。
+- **最高优先待办**：`cordis.patch.yml` 的 `bundledSkillDir` 仍是 `E:/home/dsh-skills-wj/skills`，而这个文件已随 npm 包发布——别的机器装完必须手动改成自己的路径。文件注释里给了 `!!js` + `createRequire(baseUrl)` 的可移植写法，本轮无法在不动现网 profile 的前提下验证 cordis 是否支持 `!!js`，故未擅自替换。
+- 协作风险：另一会话（OpenCode，「上传项目到 GitHub」窗口 pid 33436）同时在该仓库活动过；本轮每次写操作前都重查 `git status`，未发现冲突，但提交前仍需复检。
+
+
 ## 待确认
 
-- 是否把本地目录初始化为 git 仓库并配置 remote，改为常规 `git push` 发布。实测：`git --version` 无输出（不在 PATH，`C:\Program Files\Git\cmd\git.exe` 不存在），`node` 为 v24.9.0；另有一会话（OpenCode）正在把项目上传 GitHub，动 git 前先确认归属。
-- `package.json` 版本仍是 `1.1.1`：移除 13 条官方目录条目属破坏性变更，按 README 规则应升主版本（2.0.0），用户未表态，暂未改。
-- `package.json` 的 `files` / `exports` 是否需要包含 `official/` 与 `scripts/`：若 bundle 安装时需要官方目录，当前打包会漏掉它。
+- ~~是否把本地目录初始化为 git 仓库并配置 remote，改为常规 `git push` 发布~~ **已解决（2026-11-18 第八轮）**：本地本来就是 git 仓库（6 提交、分支 `master`、无 remote），已补 `origin=https://github.com/phoenixlucky/dsh-skills-wj.git`、改名 `main`、合并网页端历史后推送；`git` 2.56.1 与 `gh` 2.93.0 都在 PATH。
+- ~~`package.json` 版本仍是 `1.1.1`：移除 13 条官方目录条目属破坏性变更，应升 2.0.0~~ **已解决（2026-11-18 第八轮）**：那 13 条已被拍平恢复（14 条全在同一层），不构成破坏性变更，按新增功能定 **1.2.0** 并已发布。
+- ~~`package.json` 的 `files` / `exports` 是否需要包含 `official/` 与 `scripts/`~~ **已决策（2026-11-18 第八轮）**：不包含。bundle 只挂 `skills/`，`official/` 由官方 provider 按 assetRoot 读；13 条摘要条许可来源不清，不再往 npm 分发。`check:skills` 属开发期脚本，不进包。
