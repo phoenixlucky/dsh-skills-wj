@@ -56,6 +56,12 @@
   - 尚未在 GUI 看到图标：桌面 profile 装的是 registry 版 `@tinyforge/dsh-skills-wj@1.2.0`（无 icon 字段），profile 的 `node_modules` 不在本会话可写范围；要显示必须发 1.2.1 后更新，或在用户确认后改 profile 内拷贝。
 - 2026-11-19：新建 `AGENTS.md`（骨架 + 三条可复用约定）并加入 `.gitignore`；`MEMORY.md` **已是版本库跟踪文件**（`git ls-files` 可见），按纪律未 `git rm`、未改历史，仅在此记录现状。
 
+- 2026-11-20（用户要求“接着升 1.2.1、push 到 GitHub 并发布 npm”，已完成）：`npm version patch` → **1.2.1**；README 的版本行、结构图（补 `icon.webp` 行）、npm 包内容说明、「版本与变更」（未发布条目改写为 1.2.1）、MEMORY 一并更新；提交 `4487da9` 推到 `main`，annotated tag `v1.2.1`（`d4a6316`）已推，GitHub Release `v1.2.1`（Latest，标题「v1.2.1 - skill 升级到最新上游 + 插件图标」）。
+  - npm 发布成功：`+ @tinyforge/dsh-skills-wj@1.2.1`，日志 `http fetch PUT https://registry.npmjs.org/@tinyforge%2fdsh-skills-wj 202`；tarball **241 文件 / 755.8 kB / 解包 2,274,555 B / shasum `cb915811952a886a6a77be52adc6c110a260b960`**，与本机 `npm pack --dry-run` 一致；`icon.webp`（51.8 kB）在包内，`package.json.icon = "./icon.webp"`。
+  - 注册表传播实测：发布后约 1 分钟 `dist-tags.latest` 仍是 1.2.0、versions 只有 `0.0.0-stage,1.2.0`；约 8 小时后复测 `latest = 1.2.1`、versions 含 1.2.1。**判据依旧是日志里的 PUT 202，别因 GET 落后而重发。**
+  - 并发处理：另一会话（图标那轮）留下的 `icon.webp`、`package.json.icon`/`files`、`.gitignore`（忽略 `AGENTS.md`）、MEMORY 第十一轮条目，本轮整体纳入 1.2.1 提交，未冲突。
+  - 未做：桌面 profile 仍依赖 registry 版 `@tinyforge/dsh-skills-wj: ^1.2.0`，要看到图标需更新 profile 到 1.2.1（`dsh plugin --profile desktop add @tinyforge/dsh-skills-wj@1.2.1`）；本轮没动 live profile。
+
 ## 待确认
 
 - ~~是否把本地目录初始化为 git 仓库并配置 remote，改为常规 `git push` 发布~~ **已解决（2026-11-18 第八轮）**：本地本来就是 git 仓库（6 提交、分支 `master`、无 remote），已补 `origin=https://github.com/phoenixlucky/dsh-skills-wj.git`、改名 `main`、合并网页端历史后推送；`git` 2.56.1 与 `gh` 2.93.0 都在 PATH。
