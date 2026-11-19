@@ -65,7 +65,10 @@
 - 2026-11-20 第十二轮（用户报“插件没有显示中文名武库”）：根因是包内无 `locale/`，宿主 `readPluginMeta`（`packages/boot/app-boot/src/package-meta.ts`）在缺 locale 时用 `package.json.name` 当 `meta.title` 兜底，插件列表便显示 `@tinyforge/dsh-skills-wj`。修法：新增 `locale/en.json`（`Skill arsenal`）与 `locale/zh.json`（**武库**），`package.json` 的 `exports` 补 `"./locale/*.json"`、`files` 补 `locale/*.json`。
   - 验证探针沿用 `.tmp/probe-meta.mjs`（拷 `package.json`+`icon.webp`+`locale/` 到 `.tmp/probe/node_modules/@tinyforge/dsh-skills-wj/`）：`title: {"en":"Skill arsenal","zh":"武库"}`、`error: none`、icon 仍逐字节一致。
   - `npm pack --dry-run`：243 文件（+2 locale）/ 756.1 kB / 解包 2.3 MB，locale 两份均在包内。
-  - 发布与 profile 升级按用户选择执行：1.2.1 → **1.2.2**。
+  - 发布与 profile 升级按用户选择执行：1.2.1 → **1.2.2**。提交 `fe489c0`、annotated tag `v1.2.2`、GitHub Release `v1.2.2`（标题「v1.2.2 - 插件显示名「武库」」）均已推送；`npm publish` 成功（`+ @tinyforge/dsh-skills-wj@1.2.2`，243 文件 / 756.3 kB / shasum `8a6b248b…`）。**注册表 GET 约 2 分钟后才见 1.2.2**，之前 `dsh plugin add` 会报 `ERR_PNPM_NO_MATCHING_VERSION`，判据仍是 PUT 202。
+  - profile 升级：`dsh plugin --profile desktop add @tinyforge/dsh-skills-wj@1.2.2 --save-exact`（pnpm 11.28.5，顺带在 profile 的 `pnpm-workspace.yaml` 加了 `minimumReleaseAgeExclude`）；已核对该目录下 `package.json` 版本 1.2.2、`locale/zh.json` 在包内、exports 含 `./locale/*.json`。**plugin_manager 的 `install_bundle` 对已装同名包直接回 `already-installed`（要求先 remove），改版本走 `dsh plugin add` 更省事。**
+  - 宿主读取器按 **profile 解析基准**复验（`.tmp/probe-profile.mjs`，parentURL = profile 的 `package.json`，即 plugin-manager `bundles()` 第 739 行同款调用）：`title {"en":"Skill arsenal","zh":"武库"}`，无 error 且有 icon。注：`plugin_manager` 工具的 `list_bundles` 会**主动剥掉 `meta` 字段**（`plugin-manager/src/tools.ts` 131–135 行），不能拿它的输出来判断标题是否生效。
+  - 未做/未验证：受 `dsh web` 认证（launch token 只存内存，URL 无 token 时 401）与桌面窗口最小化限制，**未在 GUI 里目视确认**列表标题；用户重开插件页仍显示包名时，刷新或重启 DSH 即可（Node 的 package.json 缓存按 mtime 失效，正常应已生效）。
 
 ## 待确认
 
