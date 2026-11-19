@@ -1,6 +1,8 @@
-# dsh-skills-wj
+# 武库 · dsh-skills-wj
 
-版本化的 DeepSeek Harness skill 源目录：`official/` 放官方目录条目（当前 1 个：`figma-design-skill`），`skills/` 放自有与引入的 skill，整仓库可作为一个 DSH bundle 安装。
+> 杜预号「武库」，满腹兵甲，取用不竭。库里各色 skill 同源不同途——官定条目、自有、引入，同库版本化，按需取用。
+
+版本化的 DeepSeek Harness skill 源目录：`official/` 放官方目录条目（14 个：`figma-design-skill` 为完整正文，其余 13 条为摘要条），`skills/` 放自有与引入的 skill（3 个），整仓库可作为一个 DSH bundle 安装。
 
 | | |
 | --- | --- |
@@ -8,7 +10,7 @@
 | 包 | npm [`@tinyforge/dsh-skills-wj`](https://www.npmjs.com/package/@tinyforge/dsh-skills-wj) |
 | 版本 | `1.2.0` |
 | 许可 | 自有内容 MIT；`figma-design-skill` 上游 MIT；`chrome-extensions`、`modern-web-guidance` 上游 Apache-2.0（GoogleChrome/modern-web-guidance） |
-| 最近更新 | 2026-11-18 |
+| 最近更新 | 2026-11-19 |
 
 ## 结构
 
@@ -19,7 +21,7 @@ official/                        官方目录：由 @deepseek-ai/dsh-skill-offic
 skills/                          bundle 根：SKILL.md + 可选 references/、guides/
   zuowang-skill/                 自有
   chrome-extensions/             外部引入（SKILL.md + 19 篇 references/extensions + 4 篇 webstore）
-  modern-web-guidance/           外部引入（SKILL.md + 209 篇 guides/**）
+  modern-web-guidance/           外部引入（SKILL.md + 210 篇 guides/**）
 scripts/check-skills.mjs         提交前校验：缺文件、缺 frontmatter、name 与目录不符、重名
 .githooks/pre-commit             调用上面的校验，坏文件不许进仓库
 cordis.patch.yml                 挂载层：host 级 skill-filesystem（bundledSkillDir 指向 skills/）+ tool-skill
@@ -48,21 +50,23 @@ package.json                     dsh.bundle 声明与 check:skills 脚本
 | `superpowers` | [obra/superpowers](https://github.com/obra/superpowers) | **v7.0.2** | 2026-11-04 | 摘要条 |
 | `ponytail` | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | **v5.3.3** | 2026-10-29 | 摘要条 |
 | `taste-skill` | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) | **v2.5.1** | 2026-11-07 | 摘要条 |
-| `ui-ux-pro-max` | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | **v2.15.0** | 2026-11-16 | 摘要条 |
-| `officecli` | [iOfficeAI/OfficeCLI](https://github.com/iOfficeAI/OfficeCLI) | **v1.0.162** | 2026-11-17 | 摘要条 |
-| `vision-liao-memory` | [topoteretes/cognee](https://github.com/topoteretes/cognee) | 无 tag | 2026-11-16 | 摘要条 |
+| `ui-ux-pro-max` | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | **v2.15.0** | 2026-11-19 | 摘要条 |
+| `officecli` | [iOfficeAI/OfficeCLI](https://github.com/iOfficeAI/OfficeCLI) | **v1.0.162** | 2026-11-19 | 摘要条 |
+| `vision-liao-memory` | [topoteretes/cognee](https://github.com/topoteretes/cognee) | 无 tag | 2026-11-19 | 摘要条 |
 | `github` | [clawhub.ai/steipete/github](https://clawhub.ai/steipete/github) | 无版本号 | 2026-06-17 | 摘要条 |
 | `moon-lovers` | [phoenixlucky/moon-lovers-skill](https://github.com/phoenixlucky/moon-lovers-skill) | **v1.4.5** | 2026-06-18 | 摘要条 |
 | `zerotoken-skill` | [phoenixlucky/zerotoken-skill](https://github.com/phoenixlucky/zerotoken-skill) | **v1.17.0** | 2026-10-16 | 摘要条 |
 | `weiliaozi-skill` | [phoenixlucky/weiliaozi-skill](https://github.com/phoenixlucky/weiliaozi-skill) | **v2.2.1** | 2026-09-24 | 摘要条 |
 
+> 「上游更新」取上游默认分支最新提交时间（Asia/Shanghai）；有 tag 的写 tag，无 tag 的写最新提交。摘要条只跟版本，不携带上游正文。
+
 ## `skills/` 的 3 个 skill
 
 | skill | 来源 | 版本 | 上游更新 | 本地 |
 | --- | --- | --- | --- | --- |
-| `zuowang-skill` | [phoenixlucky/zuowang-skill](https://github.com/phoenixlucky/zuowang-skill) | 无版本号（rev `88c6963`） | 2026-11-17 | 与上游一致 |
-| `chrome-extensions` | [GoogleChrome/modern-web-guidance](https://github.com/GoogleChrome/modern-web-guidance) · `skills/chrome-extensions` | 仓库 tag **v1.0.1** | 2026-11-16 | 与上游一致 |
-| `modern-web-guidance` | 同上 · `skills/modern-web-guidance` | **`2026_11_09-5bcc021b`**（skill 内版本标识） | 2026-11-16 | 与上游一致（17 个 guides 主题） |
+| `zuowang-skill` | [phoenixlucky/zuowang-skill](https://github.com/phoenixlucky/zuowang-skill) | 无版本号（rev `28a90409`） | 2026-11-19 | 与上游一致（148 行） |
+| `chrome-extensions` | [GoogleChrome/modern-web-guidance](https://github.com/GoogleChrome/modern-web-guidance) · `skills/chrome-extensions` | 仓库 tag **v1.0.1** | 2026-11-16 | 与上游一致（24 个文件） |
+| `modern-web-guidance` | 同上 · `skills/modern-web-guidance` | 仓库 tag **v1.0.1**；skill 内标识 **`2026_11_10-47b4c80e`** | 2026-11-16 | 与上游一致（17 个 guides 主题 / 210 篇） |
 
 ## 提交前校验
 
@@ -161,11 +165,12 @@ npm 包里只有 `cordis.patch.yml` + `skills/` + `README.md`（即 `package.jso
 - **1.0.0**（2026-11-18）首个稳定版本：`zuowang-skill` 定稿，README 与 MIT 许可证补齐，发布公开仓库并打 `v1.0.0` Release。
 - **1.1.x**：引入 `official/` 官方目录、`chrome-extensions` 与 `modern-web-guidance`；新增 `scripts/check-skills.mjs` 与 `.githooks/pre-commit`。
 - **1.2.0**（2026-11-18）首个 npm 版本：将 `official/wj-forge/<name>/` 拍平为 `official/<name>/`（14 条全部保留在同一层），`figma-design-skill` 同时由 2.4.2 升级到 **2.16.0**（正文 411 行 + references 208/211/228 行）；`check-skills.mjs` 的 `OFFICIAL_SKILLS` 同步为 14 个平铺目录；`package.json` 新增 `publishConfig`（public）与 `prepublishOnly`（发布前强制跑 `check:skills`）；本机仓库首次接上 `origin`，与网页端建库历史合并后统一推到 `main`。
+- **未发布（2026-11-19，skill 内容升级）**：`zuowang-skill` 同步到上游 `28a90409`（坐忘×尉缭子版，148 行）；`modern-web-guidance` 由仓库 tag v1.0.0 升到 **v1.0.1**（45 篇 guides 改写 + 新增 `guides/js/js.md`，skill 内版本标识 `2026_11_09-5bcc021b` → `2026_11_10-47b4c80e`，共 210 篇）；`chrome-extensions` 与 `figma-design-skill`（2.16.0）逐字节核验与上游一致；`official/figma-design-skill/LICENSE` 补回上游的结尾换行。`package.json` 版本仍为 `1.2.0`，发布前建议先升 `1.2.1`。
 
 ## 第三方内容与许可
 
 - `zuowang-skill`：本仓库自有，MIT。
-- `skills/chrome-extensions`、`skills/modern-web-guidance`：来自 <https://github.com/GoogleChrome/modern-web-guidance>（Apache-2.0），本地内容与上游 HEAD 对齐；`modern-web-guidance` 运行时还依赖上游 npm 包检索。
+- `skills/chrome-extensions`、`skills/modern-web-guidance`：来自 <https://github.com/GoogleChrome/modern-web-guidance>（Apache-2.0），本地内容与上游 tag **v1.0.1** 逐字节对齐；`modern-web-guidance` 运行时还依赖上游 npm 包检索。
 - `official/figma-design-skill`：来自 <https://github.com/phoenixlucky/figma-design-skill>，MIT，v2.16.0。
 - 其余 13 个 `official/<name>`：摘要条，上游与许可各见其 `source-url`（anthropics/skills、obra/superpowers、DietrichGebert/ponytail、Leonxlnx/taste-skill、nextlevelbuilder/ui-ux-pro-max-skill、iOfficeAI/OfficeCLI、topoteretes/cognee、clawhub.ai/steipete/github 及 phoenixlucky 自有仓库）。
 

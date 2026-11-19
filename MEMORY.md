@@ -40,6 +40,13 @@
 - **最高优先待办**：`cordis.patch.yml` 的 `bundledSkillDir` 仍是 `E:/home/dsh-skills-wj/skills`，而这个文件已随 npm 包发布——别的机器装完必须手动改成自己的路径。文件注释里给了 `!!js` + `createRequire(baseUrl)` 的可移植写法，本轮无法在不动现网 profile 的前提下验证 cordis 是否支持 `!!js`，故未擅自替换。
 - 协作风险：另一会话（OpenCode，「上传项目到 GitHub」窗口 pid 33436）同时在该仓库活动过；本轮每次写操作前都重查 `git status`，未发现冲突，但提交前仍需复检。
 
+- 2026-11-18 第九轮（用户问“skill 可以用了么”）实测挂载：本会话 available_skills 目录里 17 个 skill 全部出现——`skills/` 三个（zuowang-skill、chrome-extensions、modern-web-guidance）与 `official/` 十四个（figma-design-skill、superpowers、ponytail、taste-skill、ui-ux-pro-max、officecli、moon-lovers、zerotoken-skill、weiliaozi-skill、bug-hunt、code-review、release-notes、github、vision-liao-memory）。zuowang 的 description 与本地 SKILL.md 第 3 行逐字一致；chrome-extensions、modern-web-guidance 的 description 为多行块（`>` / `|`），catalog 里按首行截断。结论：`cordis.patch.yml` 的 `bundledSkillDir` 挂载在本机生效，frontmatter 解析通过（否则不会进 catalog）。未实测点：尚未用 `skill` 工具真正加载任一 skill。
+
+- 2026-11-19 第十轮（用户要求“升级里面的skill到最新版”）：逐字节核对四个携带正文的 skill 与上游 HEAD，结论——`zuowang-skill` 已在 `28a90409`（2026-11-19，148 行，上一轮工作区改动即为此版）；`chrome-extensions` 与上游 tag v1.0.1 完全一致；`figma-design-skill` 2.16.0 正文 411 行 / refs 208·211·228 行与上游一致（仅 `LICENSE` 少一个结尾换行，已补）；**唯一真正落后的是 `modern-web-guidance`：本地 = 上游 tag v1.0.0（210 文件全等），上游 v1.0.1 改了 45 篇 + 新增 `guides/js/js.md`**，已整体同步到 v1.0.1（211 文件，210 篇 guides，17 个主题，skill 内标识 `2026_11_10-47b4c80e`）。
+- 13 条摘要条只跟上游版本：11-19 复查无新 tag，仅 HEAD 前进——ui-ux-pro-max（11-19）、officecli（11-19）、cognee（11-19，+08）；README 的“上游更新”列已按 HEAD 提交日期（Asia/Shanghai）更正，并补了口径注释。`clawhub.ai/steipete/github` 不是 GitHub 仓库，无法用 API 核对，保持原样。
+- 校验：`node scripts/check-skills.mjs` → `OK 17 skill document(s) valid`，exit 0。`package.json` 仍 1.2.0（本轮只升内容，未发布）；README「版本与变更」记了“未发布（2026-11-19）”，建议下次发布前升 1.2.1。
+- 工具教训（本轮新增，可复用）：① 本会话 `bash`/`pwsh` 工具实际都是 PowerShell，命令里的双引号会被吞（`join(",")` 变 `join(,)`），复杂命令写成 `.tmp/*.mjs` 再 `node` 跑；② Node 的 `fetch` 不走系统代理（Chrome/PowerShell 走 `127.0.0.1:7892`），必须显式 `$env:HTTPS_PROXY`，否则报 `UND_ERR_SOCKET`/`ECONNRESET`，重试一次多半能过；③ `Get-Content` 按 ANSI 解码 UTF-8 中文会乱码且行数统计失真，行数/字节一律用 Node 读 `Buffer` 判断；④ 比对上游必须先把 CRLF 归一化（本仓库 core.autocrlf=true），否则每个文件都报“有差异”。
+
 
 ## 待确认
 
