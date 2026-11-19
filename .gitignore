@@ -3,3 +3,5 @@
 node_modules/
 *.log
 npm-debug.log*
+# 本地协作规范（不入库、不入包）；MEMORY.md 已在版本库中，未擅自移除
+AGENTS.md

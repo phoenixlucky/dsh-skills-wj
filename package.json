@@ -1,8 +1,9 @@
 {
   "name": "@tinyforge/dsh-skills-wj",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "武库（dsh-skills-wj）：版本化的 DeepSeek Harness skill 合集，把本包的 skills/ 挂载为 bundled skill root，并在 host 层启用 skill loader。",
   "license": "MIT",
+  "icon": "./icon.webp",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/phoenixlucky/dsh-skills-wj.git"
@@ -16,6 +17,7 @@
   },
   "files": [
     "cordis.patch.yml",
+    "icon.webp",
     "skills",
     "README.md"
   ],
@@ -35,8 +37,12 @@
     "@deepseek-ai/dsh-tool-skill": ">=0.2.2-rc.1 <0.3.0-0"
   },
   "peerDependenciesMeta": {
-    "@deepseek-ai/dsh-skill-filesystem": { "optional": true },
-    "@deepseek-ai/dsh-tool-skill": { "optional": true }
+    "@deepseek-ai/dsh-skill-filesystem": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-tool-skill": {
+      "optional": true
+    }
   },
   "dsh": {
     "bundle": {

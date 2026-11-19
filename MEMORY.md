@@ -48,6 +48,14 @@
 - 工具教训（本轮新增，可复用）：① 本会话 `bash`/`pwsh` 工具实际都是 PowerShell，命令里的双引号会被吞（`join(",")` 变 `join(,)`），复杂命令写成 `.tmp/*.mjs` 再 `node` 跑；② Node 的 `fetch` 不走系统代理（Chrome/PowerShell 走 `127.0.0.1:7892`），必须显式 `$env:HTTPS_PROXY`，否则报 `UND_ERR_SOCKET`/`ECONNRESET`，重试一次多半能过；③ `Get-Content` 按 ANSI 解码 UTF-8 中文会乱码且行数统计失真，行数/字节一律用 Node 读 `Buffer` 判断；④ 比对上游必须先把 CRLF 归一化（本仓库 core.autocrlf=true），否则每个文件都报“有差异”。
 
 
+- 2026-11-19 第十一轮（用户给了一张 1254×1254 PNG，要求“图标用这个的 webp 格式”）：新增包根 `icon.webp`——512×512 VP8X 带 alpha、51,822 B；`package.json` 加 `"icon": "./icon.webp"`，`files` 补 `icon.webp`（版本仍 1.2.0，未发布）。
+  - 处理要点：原图是 **RGB 无 alpha**，圆角方框外的四角是不透明纯黑（47,990 px），直接转 webp 会在 GUI 里露黑角；用“从四条边/四角做连通域”只吃背景黑（线稿是深藏青 B>40，不动），再 1.2px 高斯羽化 alpha、α<8 的像素清零去黑边。48px 下缩略仍清晰（`.tmp/preview-48.png`）。
+  - 宿主契约（读 `E:\home\deepseek-harness\packages\boot\app-boot\src\package-meta.ts`，0.2.2-rc.4）：`icon` 必须是相对路径、realpath 后仍在 manifest 目录内、扩展名 ∈ svg/png/jpg/jpeg/webp、≤ 256 KiB（`MAX_ICON_BYTES`），读到后转 `data:<mime>;base64,`；图标读取失败不致命，只写进 `meta.error`、标题描述照旧。也可用 `<pkg>/icon` 导出资源，但 manifest 字段优先。
+  - 实测（宿主真实代码路径）：把 `package.json`+`icon.webp` 拷到 `.tmp/probe/node_modules/@tinyforge/dsh-skills-wj/`，`import` 宿主构建产物 `packages/boot/app-boot/lib/index.js` 调 `readPluginMeta('@tinyforge/dsh-skills-wj', 'file:///E:/home/dsh-skills-wj/.tmp/probe/entry.mjs')` → `error: none`、`icon` 为 `data:image/webp;base64,…`、解出 51,822 B 与文件逐字节相等。反证：放一个 300 KiB 的假 webp → `icon exceeds 256 KiB`，说明探针有效。
+  - `npm pack --dry-run`（须带 `--cache .tmp/npm-cache`，默认 `G:\caches\npm` 在沙箱里 EPERM）：241 文件 / 755,611 B / 解包 2,274,186 B / shasum `d0fa900e…`，非 skills 条目为 `LICENSE`、`README.md`、`cordis.patch.yml`、`icon.webp`、`package.json`。
+  - 尚未在 GUI 看到图标：桌面 profile 装的是 registry 版 `@tinyforge/dsh-skills-wj@1.2.0`（无 icon 字段），profile 的 `node_modules` 不在本会话可写范围；要显示必须发 1.2.1 后更新，或在用户确认后改 profile 内拷贝。
+- 2026-11-19：新建 `AGENTS.md`（骨架 + 三条可复用约定）并加入 `.gitignore`；`MEMORY.md` **已是版本库跟踪文件**（`git ls-files` 可见），按纪律未 `git rm`、未改历史，仅在此记录现状。
+
 ## 待确认
 
 - ~~是否把本地目录初始化为 git 仓库并配置 remote，改为常规 `git push` 发布~~ **已解决（2026-11-18 第八轮）**：本地本来就是 git 仓库（6 提交、分支 `master`、无 remote），已补 `origin=https://github.com/phoenixlucky/dsh-skills-wj.git`、改名 `main`、合并网页端历史后推送；`git` 2.56.1 与 `gh` 2.93.0 都在 PATH。
