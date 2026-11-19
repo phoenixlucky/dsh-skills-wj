@@ -62,6 +62,11 @@
   - 并发处理：另一会话（图标那轮）留下的 `icon.webp`、`package.json.icon`/`files`、`.gitignore`（忽略 `AGENTS.md`）、MEMORY 第十一轮条目，本轮整体纳入 1.2.1 提交，未冲突。
   - 未做：桌面 profile 仍依赖 registry 版 `@tinyforge/dsh-skills-wj: ^1.2.0`，要看到图标需更新 profile 到 1.2.1（`dsh plugin --profile desktop add @tinyforge/dsh-skills-wj@1.2.1`）；本轮没动 live profile。
 
+- 2026-11-20 第十二轮（用户报“插件没有显示中文名武库”）：根因是包内无 `locale/`，宿主 `readPluginMeta`（`packages/boot/app-boot/src/package-meta.ts`）在缺 locale 时用 `package.json.name` 当 `meta.title` 兜底，插件列表便显示 `@tinyforge/dsh-skills-wj`。修法：新增 `locale/en.json`（`Skill arsenal`）与 `locale/zh.json`（**武库**），`package.json` 的 `exports` 补 `"./locale/*.json"`、`files` 补 `locale/*.json`。
+  - 验证探针沿用 `.tmp/probe-meta.mjs`（拷 `package.json`+`icon.webp`+`locale/` 到 `.tmp/probe/node_modules/@tinyforge/dsh-skills-wj/`）：`title: {"en":"Skill arsenal","zh":"武库"}`、`error: none`、icon 仍逐字节一致。
+  - `npm pack --dry-run`：243 文件（+2 locale）/ 756.1 kB / 解包 2.3 MB，locale 两份均在包内。
+  - 发布与 profile 升级按用户选择执行：1.2.1 → **1.2.2**。
+
 ## 待确认
 
 - ~~是否把本地目录初始化为 git 仓库并配置 remote，改为常规 `git push` 发布~~ **已解决（2026-11-18 第八轮）**：本地本来就是 git 仓库（6 提交、分支 `master`、无 remote），已补 `origin=https://github.com/phoenixlucky/dsh-skills-wj.git`、改名 `main`、合并网页端历史后推送；`git` 2.56.1 与 `gh` 2.93.0 都在 PATH。

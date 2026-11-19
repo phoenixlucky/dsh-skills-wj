@@ -8,9 +8,9 @@
 | --- | --- |
 | 仓库 | <https://github.com/phoenixlucky/dsh-skills-wj>（公开） |
 | 包 | npm [`@tinyforge/dsh-skills-wj`](https://www.npmjs.com/package/@tinyforge/dsh-skills-wj) |
-| 版本 | `1.2.1` |
+| 版本 | `1.2.2` |
 | 许可 | 自有内容 MIT；`figma-design-skill` 上游 MIT；`chrome-extensions`、`modern-web-guidance` 上游 Apache-2.0（GoogleChrome/modern-web-guidance） |
-| 最近更新 | 2026-11-19 |
+| 最近更新 | 2026-11-20 |
 
 ## 结构
 
@@ -26,6 +26,7 @@ scripts/check-skills.mjs         提交前校验：缺文件、缺 frontmatter�
 .githooks/pre-commit             调用上面的校验，坏文件不许进仓库
 cordis.patch.yml                 挂载层：host 级 skill-filesystem（bundledSkillDir 指向 skills/）+ tool-skill
 icon.webp                         插件图标（512×512、webp、带 alpha），由 package.json 的 icon 字段引用
+locale/en.json、locale/zh.json    插件显示名与描述（meta.title / meta.description），英文 / 中文
 package.json                     dsh.bundle 声明与 check:skills 脚本
 ```
 
@@ -126,7 +127,7 @@ git clone https://github.com/phoenixlucky/dsh-skills-wj.git
 dsh plugin --profile desktop add file:<克隆目录>
 ```
 
-npm 包里只有 `cordis.patch.yml` + `icon.webp` + `skills/` + `README.md`（即 `package.json` 的 `files`），因为 bundle 只挂 `skills/`；`official/` 由官方 provider 自己按 assetRoot 读，不需要随包分发。`icon.webp`（512×512、带 alpha、约 51 KiB）由宿主按 `package.json.icon` 读取，用来在插件列表里显示图标。
+npm 包里只有 `cordis.patch.yml` + `icon.webp` + `locale/*.json` + `skills/` + `README.md`（即 `package.json` 的 `files`），因为 bundle 只挂 `skills/`；`official/` 由官方 provider 自己按 assetRoot 读，不需要随包分发。`icon.webp`（512×512、带 alpha、约 51 KiB）由宿主按 `package.json.icon` 读取，用来在插件列表里显示图标；`locale/zh.json` 的 `meta.title` 为「武库」，插件列表与详情页按宿主语言取用，`locale/en.json` 是英文回落（Skill arsenal）。
 
 安装后确认 profile 的 `package.json` 同时出现依赖与 bundles 条目：
 
@@ -167,6 +168,7 @@ npm 包里只有 `cordis.patch.yml` + `icon.webp` + `skills/` + `README.md`（�
 - **1.1.x**：引入 `official/` 官方目录、`chrome-extensions` 与 `modern-web-guidance`；新增 `scripts/check-skills.mjs` 与 `.githooks/pre-commit`。
 - **1.2.0**（2026-11-18）首个 npm 版本：将 `official/wj-forge/<name>/` 拍平为 `official/<name>/`（14 条全部保留在同一层），`figma-design-skill` 同时由 2.4.2 升级到 **2.16.0**（正文 411 行 + references 208/211/228 行）；`check-skills.mjs` 的 `OFFICIAL_SKILLS` 同步为 14 个平铺目录；`package.json` 新增 `publishConfig`（public）与 `prepublishOnly`（发布前强制跑 `check:skills`）；本机仓库首次接上 `origin`，与网页端建库历史合并后统一推到 `main`。
 - **1.2.1**（2026-11-19）skill 内容升级 + 插件图标：`zuowang-skill` 同步到上游 `28a90409`（坐忘×尉缭子版，148 行）；`modern-web-guidance` 由仓库 tag v1.0.0 升到 **v1.0.1**（45 篇 guides 改写 + 新增 `guides/js/js.md`，skill 内版本标识 `2026_11_09-5bcc021b` → `2026_11_10-47b4c80e`，共 210 篇）；`chrome-extensions` 与 `figma-design-skill`（2.16.0）逐字节核验与上游一致；`official/figma-design-skill/LICENSE` 补回上游的结尾换行。新增包根 `icon.webp`（512×512 VP8X 带 alpha，51,822 B）并在 `package.json` 声明 `"icon": "./icon.webp"`、`files` 补 `icon.webp`。
+- **1.2.2**（2026-11-20）插件显示名：新增 `locale/zh.json`（`meta.title` = **武库**）与 `locale/en.json`（`meta.title` = `Skill arsenal`），`package.json` 的 `exports` / `files` 补 `./locale/*.json`。此前缺 locale 时插件列表按宿主规则回落到包名 `@tinyforge/dsh-skills-wj`，装上本版后中文界面显示「武库」、英文界面显示 `Skill arsenal`。
 
 ## 第三方内容与许可
 

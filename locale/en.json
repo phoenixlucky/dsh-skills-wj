@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Skill arsenal",
+    "description": "Versioned DeepSeek Harness skill collection. Mounts this package's skills/ as a bundled skill root and enables the skill loader at the host layer."
+  }
+}
