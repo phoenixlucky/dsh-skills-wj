@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "武库",
+    "title": "WJ 武库",
     "description": "版本化的 DeepSeek Harness skill 合集：把本包的 skills/ 挂载为 bundled skill root，并在 host 层启用 skill loader。"
   }
 }

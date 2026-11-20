@@ -1,7 +1,7 @@
 {
   "name": "@tinyforge/dsh-skills-wj",
-  "version": "1.2.2",
-  "description": "武库（dsh-skills-wj）：版本化的 DeepSeek Harness skill 合集，把本包的 skills/ 挂载为 bundled skill root，并在 host 层启用 skill loader。",
+  "version": "1.2.3",
+  "description": "WJ 武库（dsh-skills-wj）：版本化的 DeepSeek Harness skill 合集，把本包的 skills/ 挂载为 bundled skill root，并在 host 层启用 skill loader。",
   "license": "MIT",
   "icon": "./icon.webp",
   "repository": {
