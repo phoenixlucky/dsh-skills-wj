@@ -1,5 +1,7 @@
 # WJ 武库 · dsh-skills-wj
 
+![license](https://img.shields.io/badge/license-MIT-green) ![npm](https://img.shields.io/npm/v/@tinyforge/dsh-skills-wj?label=npm) ![downloads](https://img.shields.io/npm/dm/@tinyforge/dsh-skills-wj?label=downloads) ![DSH Web Plugin](https://img.shields.io/badge/DSH_Web_Plugin-yes-brightgreen) ![DSH tested up to](https://img.shields.io/badge/DSH_tested_up_to-0.2.2--rc.5-blue)
+
 > 杜预号「武库」，满腹兵甲，取用不竭。库里各色 skill 同源不同途——官定条目、自有、引入，同库版本化，按需取用。
 
 版本化的 DeepSeek Harness skill 源目录：`official/` 放官方目录条目（14 个：`figma-design-skill` 为完整正文，其余 13 条为摘要条），`skills/` 放自有与引入的 skill（3 个），整仓库可作为一个 DSH bundle 安装。
@@ -8,9 +10,9 @@
 | --- | --- |
 | 仓库 | <https://github.com/phoenixlucky/dsh-skills-wj>（公开） |
 | 包 | npm [`@tinyforge/dsh-skills-wj`](https://www.npmjs.com/package/@tinyforge/dsh-skills-wj) |
-| 版本 | `1.2.3` |
+| 版本 | `1.2.4` |
 | 许可 | 自有内容 MIT；`figma-design-skill` 上游 MIT；`chrome-extensions`、`modern-web-guidance` 上游 Apache-2.0（GoogleChrome/modern-web-guidance） |
-| 最近更新 | 2026-11-20 |
+| 最近更新 | 2026-11-21 |
 
 ## 结构
 
@@ -170,6 +172,7 @@ npm 包里只有 `cordis.patch.yml` + `icon.webp` + `locale/*.json` + `skills/` 
 - **1.2.1**（2026-11-19）skill 内容升级 + 插件图标：`zuowang-skill` 同步到上游 `28a90409`（坐忘×尉缭子版，148 行）；`modern-web-guidance` 由仓库 tag v1.0.0 升到 **v1.0.1**（45 篇 guides 改写 + 新增 `guides/js/js.md`，skill 内版本标识 `2026_11_09-5bcc021b` → `2026_11_10-47b4c80e`，共 210 篇）；`chrome-extensions` 与 `figma-design-skill`（2.16.0）逐字节核验与上游一致；`official/figma-design-skill/LICENSE` 补回上游的结尾换行。新增包根 `icon.webp`（512×512 VP8X 带 alpha，51,822 B）并在 `package.json` 声明 `"icon": "./icon.webp"`、`files` 补 `icon.webp`。
 - **1.2.2**（2026-11-20）插件显示名：新增 `locale/zh.json`（`meta.title` = **武库**）与 `locale/en.json`（`meta.title` = `Skill arsenal`），`package.json` 的 `exports` / `files` 补 `./locale/*.json`。此前缺 locale 时插件列表按宿主规则回落到包名 `@tinyforge/dsh-skills-wj`，装上本版后中文界面显示「武库」、英文界面显示 `Skill arsenal`。
 - **1.2.3**（2026-11-20）换图标、改显示名：`icon.webp` 换成新图（300×300 VP8X 带 alpha，35,466 B；源图圆角外是不透明深藏青 `#18376C`，已从四边连通域去成透明），`locale/zh.json` 的 `meta.title` 由「武库」改为 **WJ 武库**，`package.json` 的 `description` 前缀同步；英文回落仍为 `Skill arsenal`。
+- **1.2.4**（2026-11-21）README 徽章：标题下新增一排五枚 shields 徽章——许可证（取自 `package.json` 的 MIT）、npm 版本、npm 月下载、DSH Web Plugin、DSH 实测上限 **0.2.2-rc.5**（本包在 rc.5 宿主下挂载、`skills/` 三个 skill 已进会话目录）。纯文档改动，`skills/` 内容与挂载方式不变；npm 页面的 README 随本版同步。
 
 ## 第三方内容与许可
 

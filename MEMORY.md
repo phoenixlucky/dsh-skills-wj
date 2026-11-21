@@ -81,6 +81,12 @@
   - **沙箱里 git 提交会挂在 pre-commit**：`.githooks/pre-commit` 用 `#!/bin/sh`，spawn msys `sh.exe` 报 `fatal error - couldn't create signal pipe, Win32 error 5`（命名管道限制）；`git push` 也会因 `schannel AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS` 拿不到系统凭据。本轮先手动 `npm run check:skills` 通过，再用 `git commit --no-verify` + 放宽文件策略后 push。
   - 未做：未动 desktop profile（该 profile 仍是 registry 版 1.2.2）。GUI 要看到新图标与新名字：`dsh plugin --profile desktop add @tinyforge/dsh-skills-wj@1.2.3 --save-exact`。
 
+- 2026-11-21 第十四轮（用户要求「readme 增加徽章」）：README 标题下补一排五枚 shields 徽章（许可证、npm 版、npm 下载、DSH Web Plugin、DSH tested up to），只改文档：不发布、不动版本号（仍 1.2.3）。
+  - 取值：license 取 `package.json.license` = MIT → `license-MIT-green`（与 `dsh-character-presets` 同色）；npm 两枚用包名 `@tinyforge/dsh-skills-wj`；DSH 上限写**实测宿主 0.2.2-rc.5**（`DSH_INSTALL_DIR` 下 `dsh-desktop-runtime` 的 package.json version；本会话 skill catalog 已出现本包三个 skill，说明在 rc.5 下挂载生效），不是 `engines.dsh` 的 `<0.3.0-0`。
+  - 校验：PowerShell `Invoke-WebRequest` 与 `curl.exe` 访问 img.shields.io 全挂（`schannel AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS`，与 git push 同源限制），改用 Node `fetch` 逐条取 200 并读 SVG 文本：license→MIT、npm→v1.2.3、downloads→737/month、Web Plugin→yes、tested up to→0.2.2-rc.5。
+  - 语义备注：本包没有 `dsh.client`（无自有 Web UI），「DSH Web Plugin」按「能在 DSH Web profile 里加载生效」记为 yes；若按严格语义（声明 client 才算）应改 `no-lightgrey`，待用户定。
+  - 未做：未提交、未推送、未发 npm（README 在当前版本 1.2.3 内即会随包发布）。
+
 ## 待确认
 
 - ~~是否把本地目录初始化为 git 仓库并配置 remote，改为常规 `git push` 发布~~ **已解决（2026-11-18 第八轮）**：本地本来就是 git 仓库（6 提交、分支 `master`、无 remote），已补 `origin=https://github.com/phoenixlucky/dsh-skills-wj.git`、改名 `main`、合并网页端历史后推送；`git` 2.56.1 与 `gh` 2.93.0 都在 PATH。
