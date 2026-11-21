@@ -87,7 +87,8 @@
   - 语义备注：本包没有 `dsh.client`（无自有 Web UI），「DSH Web Plugin」按「能在 DSH Web profile 里加载生效」记为 yes；若按严格语义（声明 client 才算）应改 `no-lightgrey`，待用户定。
   - 发布（用户随后要求「上传github，发布npm」）：`npm version patch --no-git-tag-version` → **1.2.4**，README 版本行/最近更新/变更日志同步；`npm run check:skills` → `OK 17 skill document(s) valid`；`npm pack --dry-run` 243 文件 / 740,541 B / 解包 2,260,515 B（README 14,593 B）→ 提交 `51c7904`，annotated tag `v1.2.4` 已推，GitHub Release `v1.2.4`（标题「v1.2.4 - README 徽章」）已建，`npm publish` 成功（`+ @tinyforge/dsh-skills-wj@1.2.4`，243 文件 / 740.5 kB / shasum `22c4a2d3cd1e58d05d8e7ca6bf54660e1afe6026`，与 dry-run 一致）。
   - **沙箱内 `git push` 与 `gh release create` 都要一次性放宽到 full access**：默认 workspace-write 下 push 报 `schannel AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS`，放行后同一条命令即成功（PowerShell 把 git 的 stderr 当错误行、exit 1，但看输出里 `ab3ec7d..51c7904 main -> main` / `[new tag] v1.2.4` 即已推成）。`npm publish` 在默认沙箱下反而直接成功。
-  - 发布后约 20 秒 `npm view ... version` 仍是 1.2.3、`dist.tarball` 仍指 1.2.3：注册表读端滞后属常态，判据是 publish 输出的 `+ 包@版本`（PUT 已接受）与日志里的 201/202，不要因此重发。
+  - 传播实测：publish 在 22:38、约 20 秒与 1 分钟后 `npm view` 仍 1.2.3、packument 里无 1.2.4；**22:42（约 3.5 分钟）** packument 出现 `latest = 1.2.4`。从 registry 拉 tarball 逐项核验：740,541 B、sha1 `22c4a2d3…` 与发布输出一致、243 条目、包内 README 14,593 B（5 枚徽章、版本行 1.2.4、含 1.2.4 变更条）。
+  - 沙箱细节：Node 里 `spawnSync` 调 `tar` 报 `EPERM`（命名管道限制），解包改纯 JS（`zlib.gunzipSync` + 手写 tar 头解析）即可。
 
 ## 待确认
 
