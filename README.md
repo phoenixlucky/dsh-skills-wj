@@ -4,7 +4,7 @@
 
 > 杜预号「武库」，满腹兵甲，取用不竭。库里各色 skill 同源不同途——官定条目、自有、引入，同库版本化，按需取用。
 
-版本化的 DeepSeek Harness skill 源目录：`official/` 放官方目录条目（14 个：`figma-design-skill` 为完整正文，其余 13 条为摘要条），`skills/` 放自有与引入的 skill（3 个），整仓库可作为一个 DSH bundle 安装。
+版本化的 DeepSeek Harness skill 源目录：`official/` 放官方目录条目（14 个：`figma-design-skill` 为完整正文，其余 13 条为摘要条），`skills/` 放自有与引入的 skill（7 个），整仓库可作为一个 DSH bundle 安装。
 
 | | |
 | --- | --- |
@@ -24,6 +24,10 @@ skills/                          bundle 根：SKILL.md + 可选 references/、gu
   zuowang-skill/                 自有
   chrome-extensions/             外部引入（SKILL.md + 19 篇 references/extensions + 4 篇 webstore）
   modern-web-guidance/           外部引入（SKILL.md + 211 篇 guides/**）
+  mcp-builder/                   外部引入 anthropics/skills（SKILL.md + reference/ 5 篇 + scripts/ 4 个，11 个文件）
+  webapp-testing/                外部引入 anthropics/skills（SKILL.md + scripts/with_server.py + examples/ 3 个，6 个文件）
+  frontend-design/               外部引入 anthropics/skills（SKILL.md + LICENSE.txt，2 个文件）
+  pdf/                           外部引入 anthropics/skills（SKILL.md + REFERENCE.md、FORMS.md + scripts/，12 个文件）
 scripts/check-skills.mjs         提交前校验：缺文件、缺 frontmatter、name 与目录不符、重名
 .githooks/pre-commit             调用上面的校验，坏文件不许进仓库
 cordis.patch.yml                 挂载层：host 级 skill-filesystem（bundledSkillDir 指向 skills/）+ tool-skill
@@ -37,7 +41,7 @@ package.json                     dsh.bundle 声明与 check:skills 脚本
 | | `official/` | `skills/` |
 | --- | --- | --- |
 | 谁读 | `@deepseek-ai/dsh-skill-official`（通过 assetRoot） | `@deepseek-ai/dsh-skill-filesystem` 的 `bundledSkillDir` |
-| 数量 | 当前 14 个（平铺，无子分组） | 当前 3 个，可随时增删 |
+| 数量 | 当前 14 个（平铺，无子分组） | 当前 7 个，可随时增删 |
 | 能否改名/移动 | 不能。目录名即 provider 的 `SKILL_DIRS` | 可以，目录名与 frontmatter `name` 保持一致即可 |
 | 来源 | 上游镜像，改动应回到上游仓库 | 本仓库自有或明确引入 |
 
@@ -71,6 +75,10 @@ package.json                     dsh.bundle 声明与 check:skills 脚本
 | `zuowang-skill` | [phoenixlucky/zuowang-skill](https://github.com/phoenixlucky/zuowang-skill) | 无版本号（rev `28a90409`） | 2026-11-19 | 与上游一致（148 行） |
 | `chrome-extensions` | [GoogleChrome/modern-web-guidance](https://github.com/GoogleChrome/modern-web-guidance) · `skills/chrome-extensions` | 仓库 tag **v1.0.2** | 2026-11-23 | 与上游一致（24 个文件） |
 | `modern-web-guidance` | 同上 · `skills/modern-web-guidance` | 仓库 tag **v1.0.2**；skill 内标识 **`2026_11_16-268fb9ea`** | 2026-11-23 | 与上游一致（17 个 guides 主题 / 211 篇） |
+| `mcp-builder` | [anthropics/skills](https://github.com/anthropics/skills) · `skills/mcp-builder` | 无 tag（rev `e4bb5d96`） | 2026-11-16 | 与上游一致（11 个文件） |
+| `webapp-testing` | 同上 · `skills/webapp-testing` | 无 tag（rev `e4bb5d96`） | 2026-11-16 | 与上游一致（6 个文件） |
+| `frontend-design` | 同上 · `skills/frontend-design` | 无 tag（rev `e4bb5d96`） | 2026-11-16 | 与上游一致（2 个文件） |
+| `pdf` | 同上 · `skills/pdf` | 无 tag（rev `e4bb5d96`） | 2026-11-16 | 与上游一致（12 个文件） |
 
 ## 提交前校验
 
@@ -174,11 +182,13 @@ npm 包里只有 `cordis.patch.yml` + `icon.webp` + `locale/*.json` + `skills/` 
 - **1.2.3**（2026-11-20）换图标、改显示名：`icon.webp` 换成新图（300×300 VP8X 带 alpha，35,466 B；源图圆角外是不透明深藏青 `#18376C`，已从四边连通域去成透明），`locale/zh.json` 的 `meta.title` 由「武库」改为 **WJ 武库**，`package.json` 的 `description` 前缀同步；英文回落仍为 `Skill arsenal`。
 - **1.2.4**（2026-11-21）README 徽章：标题下新增一排五枚 shields 徽章——许可证（取自 `package.json` 的 MIT）、npm 版本、npm 月下载、DSH Web Plugin、DSH 实测上限 **0.2.2-rc.5**（本包在 rc.5 宿主下挂载、`skills/` 三个 skill 已进会话目录）。纯文档改动，`skills/` 内容与挂载方式不变；npm 页面的 README 随本版同步。
 - **1.2.5**（2026-11-24）`modern-web-guidance` 同步上游 v1.0.2 + 摘要条来源事实修正：`modern-web-guidance` 同步到上游 tag **v1.0.2**——共 33 项差异：新增 `guides/ui-components/context-menu.md`、`guides/visual-design/teaser.md`，删除 `guides/visual-design/soft-edge-content-fade.md`，改写 31 项（30 篇 guides + `SKILL.md` 的检索版本标识 `2026_11_10-47b4c80e` → `2026_11_16-268fb9ea`）；现 212 文件 / 211 篇 guides，与上游 v1.0.2 逐 blob 比对 0 差异。`chrome-extensions` 在 v1.0.2 里该目录无变化，仍 24 文件一致。README 上游版本列同步：`officecli` v1.0.162 → **v1.0.163**，`ponytail` / `taste-skill` / `ui-ux-pro-max` / `vision-liao-memory` 的上游更新日期改为各自 HEAD（11-22 / 11-23 / 11-24 / 11-20）。**来源事实修正**：`bug-hunt`、`code-review`、`release-notes` 撤掉无效的 `source-url`（实测 anthropics/skills 的 `skills/` 下无这三个，改为 `source-note` 记待补）；`vision-liao-memory` 改指 cognee 的 `.agents/skills/` 并注明对应 `cognee-recall` / `cognee-improve-sessions`。纯内容与文档变更，`package.json` 版本随之升到 **1.2.5** 并随本版发布到 npm。
+- **未发布（2026-11-24，建议升 1.2.6）**：从 <https://github.com/anthropics/skills>（rev `e4bb5d96`）**全文镜像** 4 个 skill 到 `skills/`——`mcp-builder`（11 文件 / 160 KiB，MCP 服务器开发指南，DSH 侧此前无对应能力）、`webapp-testing`（6 文件 / 22 KiB，Playwright 本地应用测试 + `scripts/with_server.py`）、`frontend-design`（2 文件 / 19 KiB，审美方向）、`pdf`（12 文件 / 69 KiB，pypdf / 表单 / OCR）。四者均按上游逐 blob 校验一致（共 31 文件 / 270 KiB），目录内保留 Apache-2.0 `LICENSE.txt`，**不生成摘要条**；`check:skills` → 21 篇通过，`skills/` 由 3 个增到 7 个。
 
 ## 第三方内容与许可
 
 - `zuowang-skill`：本仓库自有，MIT。
 - `skills/chrome-extensions`、`skills/modern-web-guidance`：来自 <https://github.com/GoogleChrome/modern-web-guidance>（Apache-2.0），本地内容与上游 tag **v1.0.2** 逐字节对齐；`modern-web-guidance` 运行时还依赖上游 npm 包检索。
+- `skills/mcp-builder`、`skills/webapp-testing`、`skills/frontend-design`、`skills/pdf`：来自 <https://github.com/anthropics/skills>，**Apache-2.0**（每个目录内保留上游 `LICENSE.txt`），同步上游 `e4bb5d96`（2026-11-16）。四者上游均无 tag，只能跟提交。
 - `official/figma-design-skill`：来自 <https://github.com/phoenixlucky/figma-design-skill>，MIT，v2.16.0。
 - 其余 13 个 `official/<name>`：摘要条，上游与许可各见其 `source-url`（obra/superpowers、DietrichGebert/ponytail、Leonxlnx/taste-skill、nextlevelbuilder/ui-ux-pro-max-skill、iOfficeAI/OfficeCLI、topoteretes/cognee、clawhub.ai/steipete/github 及 phoenixlucky 自有仓库）。`bug-hunt`、`code-review`、`release-notes` 不在此列：它们原标注 anthropics/skills，经核实该仓库没有对应 skill，已撤掉无效的 `source-url`、改为 `source-note` 记待补，**来源未确认前不要当作 anthropics 内容分发**。
 

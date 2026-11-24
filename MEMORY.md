@@ -47,7 +47,6 @@
 - 校验：`node scripts/check-skills.mjs` → `OK 17 skill document(s) valid`，exit 0。`package.json` 仍 1.2.0（本轮只升内容，未发布）；README「版本与变更」记了“未发布（2026-11-19）”，建议下次发布前升 1.2.1。
 - 工具教训（本轮新增，可复用）：① 本会话 `bash`/`pwsh` 工具实际都是 PowerShell，命令里的双引号会被吞（`join(",")` 变 `join(,)`），复杂命令写成 `.tmp/*.mjs` 再 `node` 跑；② Node 的 `fetch` 不走系统代理（Chrome/PowerShell 走 `127.0.0.1:7892`），必须显式 `$env:HTTPS_PROXY`，否则报 `UND_ERR_SOCKET`/`ECONNRESET`，重试一次多半能过；③ `Get-Content` 按 ANSI 解码 UTF-8 中文会乱码且行数统计失真，行数/字节一律用 Node 读 `Buffer` 判断；④ 比对上游必须先把 CRLF 归一化（本仓库 core.autocrlf=true），否则每个文件都报“有差异”。
 
-
 - 2026-11-19 第十一轮（用户给了一张 1254×1254 PNG，要求“图标用这个的 webp 格式”）：新增包根 `icon.webp`——512×512 VP8X 带 alpha、51,822 B；`package.json` 加 `"icon": "./icon.webp"`，`files` 补 `icon.webp`（版本仍 1.2.0，未发布）。
   - 处理要点：原图是 **RGB 无 alpha**，圆角方框外的四角是不透明纯黑（47,990 px），直接转 webp 会在 GUI 里露黑角；用“从四条边/四角做连通域”只吃背景黑（线稿是深藏青 B>40，不动），再 1.2px 高斯羽化 alpha、α<8 的像素清零去黑边。48px 下缩略仍清晰（`.tmp/preview-48.png`）。
   - 宿主契约（读 `E:\home\deepseek-harness\packages\boot\app-boot\src\package-meta.ts`，0.2.2-rc.4）：`icon` 必须是相对路径、realpath 后仍在 manifest 目录内、扩展名 ∈ svg/png/jpg/jpeg/webp、≤ 256 KiB（`MAX_ICON_BYTES`），读到后转 `data:<mime>;base64,`；图标读取失败不致命，只写进 `meta.error`、标题描述照旧。也可用 `<pkg>/icon` 导出资源，但 manifest 字段优先。
@@ -113,10 +112,22 @@
   - 从 registry 反向核验（`.tmp/verify-registry.mjs`，纯 JS 解 tar，不用 spawn）：tarball 749,215 B、sha1 = `dist.shasum`、244 条目；包内 README 16,476 B 且含「版本 1.2.5」行与 1.2.5 变更条；`skills/modern-web-guidance` 212 条目、`context-menu.md`/`teaser.md` 在包内、`soft-edge-content-fade.md` 不在、`SKILL.md` 标识 `2026_11_16-268fb9ea`；`package.json` version 1.2.5。
   - 未做（用户未要求，且属另一决策）：GitHub Release `v1.2.5` 未建（tag 已在远端）；桌面 profile 仍是旧版，要看新内容需 `dsh plugin --profile desktop add @tinyforge/dsh-skills-wj@1.2.5 --save-exact`。
 
+- 2026-11-24 第十八轮（用户问 anthropics/skills 里「哪个可以加入」）：侦察 `https://github.com/anthropics/skills`（HEAD `e4bb5d96`，2026-11-16，`skills/` 下 19 个，根目录无 LICENSE）。
+  - **许可**：每个 skill 自带 `LICENSE.txt` = **Apache-2.0**（可再分发，须保留许可与声明）；根有 `THIRD_PARTY_NOTICES.md`（列 imageio 等 Python 依赖）。例外：`doc-coauthoring` 目录只有 SKILL.md、**无 LICENSE.txt**，许可未明 → 不可镜像；`skill-creator` 有 LICENSE.txt 但 SKILL.md 无 `license` 字段。
+  - **体积**（files / 字节）：canvas-design 83/5.4 MiB（含 54 个 ttf）、claude-api 96/2.0 MiB（91 md）、pptx 58/1.17 MiB、docx 61/1.14 MiB、xlsx 53/1.14 MiB、skill-creator 18/220 KiB、mcp-builder 11/155 KiB、theme-factory 13/141 KiB、pdf 12/67 KiB、algorithmic-art 4/58 KiB、web-artifacts-builder 5/45 KiB、slack-gif-creator 7/43 KiB、webapp-testing 6/22 KiB、internal-comms 6/22 KiB、discernment-nudge 2/21 KiB、frontend-design 2/19 KiB、academy-guide 2/19 KiB、doc-coauthoring 1/15 KiB、brand-guidelines 2/13 KiB。
+  - **结构约束（重要）**：新增外部 skill 只能进 `skills/`，**不能进 `official/`**——`official/` 是官方 provider 的 SKILL_DIRS 镜像，`check-skills.mjs` 的 `OFFICIAL_SKILLS` 是硬编码的 14 个，多放会报 `unexpected entry beside the catalog`。外部引入先例：`chrome-extensions`、`modern-web-guidance`（同样 Apache-2.0 全文镜像）。
+  - 重叠判断（对照本会话 catalog）：`docx`/`xlsx`/`pptx` 与 `office`/`office-docx`/`office-pptx`/`office-xlsx`（officecli）重复；`skill-creator` 与 `writing-skills` 重复且依赖 Claude 专有 eval 流程（13 处 Anthropic 引用）；`theme-factory`/`brand-guidelines` 与 `design`/`design-system`/`ui-styling` 重复；`web-artifacts-builder` 绑 claude.ai artifacts、`academy-guide` 绑 Claude Academy、`slack-gif-creator` 绑 Slack，平台锁死。
+  - **推荐加入（Apache-2.0、无同名冲突、无平台锁定）**：`mcp-builder`（155 KiB，DSH 本身以 MCP 扩展，零重叠）、`webapp-testing`（22 KiB，Playwright 本地测试 + `scripts/with_server.py`，catalog 只有 ego-browser 无测试流程）、`frontend-design`（19 KiB，审美方向，与 spec 类设计 skill 互补）、可选 `pdf`（67 KiB，与 officecli 部分重叠但补 pypdf/表单细节）。合计约 263 KiB，npm 包 2.3 MB → 约 2.5 MB。
+  - 未执行导入：等用户圈定范围。
+
 ## 待确认
 
 - ~~是否把本地目录初始化为 git 仓库并配置 remote，改为常规 `git push` 发布~~ **已解决（2026-11-18 第八轮）**：本地本来就是 git 仓库（6 提交、分支 `master`、无 remote），已补 `origin=https://github.com/phoenixlucky/dsh-skills-wj.git`、改名 `main`、合并网页端历史后推送；`git` 2.56.1 与 `gh` 2.93.0 都在 PATH。
+
 - ~~`package.json` 版本仍是 `1.1.1`：移除 13 条官方目录条目属破坏性变更，应升 2.0.0~~ **已解决（2026-11-18 第八轮）**：那 13 条已被拍平恢复（14 条全在同一层），不构成破坏性变更，按新增功能定 **1.2.0** 并已发布。
+
 - ~~`package.json` 的 `files` / `exports` 是否需要包含 `official/` 与 `scripts/`~~ **已决策（2026-11-18 第八轮）**：不包含。bundle 只挂 `skills/`，`official/` 由官方 provider 按 assetRoot 读；13 条摘要条许可来源不清，不再往 npm 分发。`check:skills` 属开发期脚本，不进包。
+
 - **新开（2026-11-24）**：`official/bug-hunt`、`official/code-review`、`official/release-notes` 的**真实来源待补**。原 `source-url` 指向 anthropics/skills，实测该仓库 `skills/` 下无这三个（404，2026-11-24），已撤掉 URL 改成 `source-note`；这三条摘要条的出处（曾疑为 Reasonix 内置 / theAIKing 收录）未定，找到真源前不要据此声明许可与归属。
+
 - **新开（2026-11-24）**：`official/github` 的 `source-url` 是 `clawhub.ai/steipete/github`，非 GitHub 仓库，API 无法核对版本与更新日期；表里写 2026-06-17 属沿用的旧记录，要更新只能人工看页面。
