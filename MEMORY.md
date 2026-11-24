@@ -127,6 +127,15 @@
   - README 同步：概述与「两个根分工」的 `skills/` 数量 3→7、结构图补 4 行（写清 `reference/` 与 `examples/` 实际文件名）、`skills/` 表补 4 行（来源 anthropics/skills、无 tag rev `e4bb5d96`、2026-11-16、与上游一致）、第三方许可节补 Apache-2.0 条目、变更日志加「未发布（建议 1.2.6）」。
   - 待办：发 1.2.6 时按既定顺序（改 version → commit → tag → 双 push → publish），桌面 profile 一并升。
 
+- 2026-11-24 第二十轮（用户「之前那些摘要，也同步」）：`official/` 的 13 条摘要条里，**6 条已原位替换为上游全文**；7 条按硬约束保留。
+  - **结构前提（决定了做法）**：`official/` 的 14 个目录名 = 官方 provider 的 `SKILL_DIRS`，`check-skills.mjs` 的 `OFFICIAL_SKILLS` 硬编码校验，所以既不能把条目搬去 `skills/`（会与 `official/` 同名重复、触发 `skill name ... also defined`），也不能删目录。做法只能是**原位替换**；`official/` 既不挂载也不进 npm（`files` 不含），因此这批改动是仓库侧参照，不改包体（`npm pack` 仍 275 文件 / 827,952 B）。
+  - **已全文同步（6）**：`superpowers`（上游无同名单体，`skills/` 下 15 个 skill 全归档到 `reference/<name>/`，索引由各 frontmatter 自动生成，80 文件 / 435.6 KiB，附上游 LICENSE，rev `22f0b463`）、`ponytail`（`ebd8654c`，1 文件 3.5 KiB）、`officecli`（`fecece3e`，1 文件 25.8 KiB）、`ui-ux-pro-max`（`f2f7266b`，81 文件 3.6 MiB，csv/json/py 数据包）、`weiliaozi-skill`（`0f96cdcd`，8 文件 2.9 MiB，其中一张 2.8 MiB PNG）、`vision-liao-memory`（cognee `1961133d`：`cognee-recall` 全文作正文，`cognee-improve-sessions` 全文放 `reference/`，因为上游是两条独立 skill、名字与目录名不符）。
+  - 每个镜像目录的 SKILL.md 在 frontmatter 补 `source-url` 与 `synced-from: <repo>@<rev>, 全文镜像于 2026-11-24`；`name` 强制对齐目录名（这 6 个上游本来就同名，无需改名）。
+  - **未同步（7）及硬理由**：`taste-skill` 上游 1631 文件 / **34.9 MiB**（webp/jpg/png 26 MiB + svg 2.5 MiB），塞进 git 只为存档不值；`zerotoken-skill` 上游 **GPL-3.0**，全文并入 MIT 仓库有传染性授权问题；`moon-lovers` 上游**无 LICENSE**（用户自己的仓库，补个许可即可同步）；`bug-hunt`/`code-review`/`release-notes` 上游不存在（anthropics/skills 无这三个）；`github` 是 clawhub.ai 页面、非 GitHub 仓库。
+  - 校验：`check:skills` → `OK 21 skill document(s) valid`；README 概述、结构图、official 导语与表格「本地」列、第三方许可、1.2.6 变更条全部改写（6 条标「全文 + rev」，7 条标原因）。
+
+- 2026-11-24 同日补记：`official/` 各目录实测体积（KiB）——figma 82.0、superpowers 440.9、ui-ux-pro-max 3701.5、weiliaozi 2912.6、officecli 25.9、vision-liao-memory 28.0、ponytail 3.6，其余 7 个各 0.4–0.5（纯摘要条）。
+
 ## 待确认
 
 - ~~是否把本地目录初始化为 git 仓库并配置 remote，改为常规 `git push` 发布~~ **已解决（2026-11-18 第八轮）**：本地本来就是 git 仓库（6 提交、分支 `master`、无 remote），已补 `origin=https://github.com/phoenixlucky/dsh-skills-wj.git`、改名 `main`、合并网页端历史后推送；`git` 2.56.1 与 `gh` 2.93.0 都在 PATH。

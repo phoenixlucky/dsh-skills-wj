@@ -4,7 +4,7 @@
 
 > 杜预号「武库」，满腹兵甲，取用不竭。库里各色 skill 同源不同途——官定条目、自有、引入，同库版本化，按需取用。
 
-版本化的 DeepSeek Harness skill 源目录：`official/` 放官方目录条目（14 个：`figma-design-skill` 为完整正文，其余 13 条为摘要条），`skills/` 放自有与引入的 skill（7 个），整仓库可作为一个 DSH bundle 安装。
+版本化的 DeepSeek Harness skill 源目录：`official/` 放官方目录条目（14 个：`figma-design-skill` 与另外 6 条为上游全文，剩余 7 条因上游无源、无许可或体积过大仍是摘要条），`skills/` 放自有与引入的 skill（7 个），整仓库可作为一个 DSH bundle 安装。
 
 | | |
 | --- | --- |
@@ -19,7 +19,7 @@
 ```
 official/                        官方目录：由 @deepseek-ai/dsh-skill-official 读取（14 个，平铺）
   figma-design-skill/            SKILL.md（v2.16.0）+ references/ 3 篇（自带 LICENSE、source-url）
-  <name>/SKILL.md                其余 13 个是 8 行摘要条（frontmatter + 一段摘要 + source-url）
+  <name>/SKILL.md                6 个已是上游全文（含 reference/、scripts/、LICENSE）；7 个仍是摘要条
 skills/                          bundle 根：SKILL.md + 可选 references/、guides/
   zuowang-skill/                 自有
   chrome-extensions/             外部引入（SKILL.md + 19 篇 references/extensions + 4 篇 webstore）
@@ -47,7 +47,7 @@ package.json                     dsh.bundle 声明与 check:skills 脚本
 
 ## `official/` 的 14 个 skill
 
-其中 13 个是**摘要条**（frontmatter + 一段摘要），不携带上游全文、没有 `version` 字段；只有 `figma-design-skill` 是完整正文并标注 `version`。摘要条用 `source-url` 指回上游，`bug-hunt` / `code-review` / `release-notes` 三个来源未确认，改用 `source-note` 记录。
+`figma-design-skill` 是完整正文并标注 `version`。**另有 6 条已由摘要条升级为上游全文镜像**：`superpowers`（15 个 skill 归档在 `reference/`）、`ponytail`、`officecli`、`ui-ux-pro-max`、`weiliaozi-skill`、`vision-liao-memory`（cognee `cognee-recall` 作正文 + `reference/cognee-improve-sessions.md`）；这些目录带 `synced-from` 记录上游提交。**仍是摘要条的 7 条**：`taste-skill`（上游 35 MiB）、`zerotoken-skill`（上游 GPL-3.0）、`moon-lovers`（上游无 LICENSE）、`bug-hunt` / `code-review` / `release-notes`（上游无源）、`github`（clawhub 非仓库），各目录内 `source-note` / `source-url` 记明原因。
 
 | skill | 来源 | 上游版本 | 上游更新 | 本地 |
 | --- | --- | --- | --- | --- |
@@ -55,16 +55,16 @@ package.json                     dsh.bundle 声明与 check:skills 脚本
 | `bug-hunt` | 来源未明（原标 [anthropics/skills](https://github.com/anthropics/skills)，该仓库无此 skill） | 未知 | 未知 | 摘要条，`source-note` 记待补 |
 | `code-review` | 同上 | 未知 | 未知 | 摘要条，`source-note` 记待补 |
 | `release-notes` | 同上 | 未知 | 未知 | 摘要条，`source-note` 记待补 |
-| `superpowers` | [obra/superpowers](https://github.com/obra/superpowers) | **v7.0.2** | 2026-11-04 | 摘要条 |
-| `ponytail` | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | **v5.3.3** | 2026-11-22 | 摘要条 |
-| `taste-skill` | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) | **v2.5.1** | 2026-11-23 | 摘要条 |
-| `ui-ux-pro-max` | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | **v2.15.0** | 2026-11-24 | 摘要条 |
-| `officecli` | [iOfficeAI/OfficeCLI](https://github.com/iOfficeAI/OfficeCLI) | **v1.0.163** | 2026-11-20 | 摘要条 |
-| `vision-liao-memory` | [topoteretes/cognee](https://github.com/topoteretes/cognee) · `.agents/skills/` | 无 tag | 2026-11-20 | 摘要条，对应 `cognee-recall` / `cognee-improve-sessions` |
+| `superpowers` | [obra/superpowers](https://github.com/obra/superpowers) | **v7.0.2** | 2026-11-04 | 全文：15 个 skill 归档于 `reference/`（rev `22f0b463`） |
+| `ponytail` | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | **v5.3.3** | 2026-11-22 | 全文（rev `ebd8654c`） |
+| `taste-skill` | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) | **v2.5.1** | 2026-11-23 | 摘要条（上游 1631 文件 / 34.9 MiB，未镜像） |
+| `ui-ux-pro-max` | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | **v2.15.0** | 2026-11-24 | 全文：81 文件 / 3.6 MiB（rev `f2f7266b`） |
+| `officecli` | [iOfficeAI/OfficeCLI](https://github.com/iOfficeAI/OfficeCLI) | **v1.0.163** | 2026-11-20 | 全文（rev `fecece3e`，SKILL.md 25.8 KiB） |
+| `vision-liao-memory` | [topoteretes/cognee](https://github.com/topoteretes/cognee) · `.agents/skills/` | 无 tag | 2026-11-20 | 全文：`cognee-recall` 作正文 + `reference/cognee-improve-sessions.md`（rev `1961133d`） |
 | `github` | [clawhub.ai/steipete/github](https://clawhub.ai/steipete/github) | 无版本号 | 2026-06-17 | 摘要条（非 GitHub 仓库，无法核对） |
-| `moon-lovers` | [phoenixlucky/moon-lovers-skill](https://github.com/phoenixlucky/moon-lovers-skill) | **v1.4.5** | 2026-06-18 | 摘要条 |
-| `zerotoken-skill` | [phoenixlucky/zerotoken-skill](https://github.com/phoenixlucky/zerotoken-skill) | **v1.17.0** | 2026-10-16 | 摘要条 |
-| `weiliaozi-skill` | [phoenixlucky/weiliaozi-skill](https://github.com/phoenixlucky/weiliaozi-skill) | **v2.2.1** | 2026-09-24 | 摘要条 |
+| `moon-lovers` | [phoenixlucky/moon-lovers-skill](https://github.com/phoenixlucky/moon-lovers-skill) | **v1.4.5** | 2026-06-18 | 摘要条（上游仓库**无 LICENSE**，未获再分发授权） |
+| `zerotoken-skill` | [phoenixlucky/zerotoken-skill](https://github.com/phoenixlucky/zerotoken-skill) | **v1.17.0** | 2026-10-16 | 摘要条（上游 **GPL-3.0**，与本库 MIT 不兼容，未镜像） |
+| `weiliaozi-skill` | [phoenixlucky/weiliaozi-skill](https://github.com/phoenixlucky/weiliaozi-skill) | **v2.2.1** | 2026-09-24 | 全文：8 文件 / 2.9 MiB（rev `0f96cdcd`） |
 
 > 「上游更新」取上游默认分支最新提交时间（Asia/Shanghai）；有 tag 的写 tag，无 tag 的写最新提交。摘要条只跟版本，不携带上游正文。来源未确认的三个标「未知」，不做推测。
 
@@ -183,6 +183,7 @@ npm 包里只有 `cordis.patch.yml` + `icon.webp` + `locale/*.json` + `skills/` 
 - **1.2.4**（2026-11-21）README 徽章：标题下新增一排五枚 shields 徽章——许可证（取自 `package.json` 的 MIT）、npm 版本、npm 月下载、DSH Web Plugin、DSH 实测上限 **0.2.2-rc.5**（本包在 rc.5 宿主下挂载、`skills/` 三个 skill 已进会话目录）。纯文档改动，`skills/` 内容与挂载方式不变；npm 页面的 README 随本版同步。
 - **1.2.5**（2026-11-24）`modern-web-guidance` 同步上游 v1.0.2 + 摘要条来源事实修正：`modern-web-guidance` 同步到上游 tag **v1.0.2**——共 33 项差异：新增 `guides/ui-components/context-menu.md`、`guides/visual-design/teaser.md`，删除 `guides/visual-design/soft-edge-content-fade.md`，改写 31 项（30 篇 guides + `SKILL.md` 的检索版本标识 `2026_11_10-47b4c80e` → `2026_11_16-268fb9ea`）；现 212 文件 / 211 篇 guides，与上游 v1.0.2 逐 blob 比对 0 差异。`chrome-extensions` 在 v1.0.2 里该目录无变化，仍 24 文件一致。README 上游版本列同步：`officecli` v1.0.162 → **v1.0.163**，`ponytail` / `taste-skill` / `ui-ux-pro-max` / `vision-liao-memory` 的上游更新日期改为各自 HEAD（11-22 / 11-23 / 11-24 / 11-20）。**来源事实修正**：`bug-hunt`、`code-review`、`release-notes` 撤掉无效的 `source-url`（实测 anthropics/skills 的 `skills/` 下无这三个，改为 `source-note` 记待补）；`vision-liao-memory` 改指 cognee 的 `.agents/skills/` 并注明对应 `cognee-recall` / `cognee-improve-sessions`。纯内容与文档变更，`package.json` 版本随之升到 **1.2.5** 并随本版发布到 npm。
 - **未发布（2026-11-24，建议升 1.2.6）**：从 <https://github.com/anthropics/skills>（rev `e4bb5d96`）**全文镜像** 4 个 skill 到 `skills/`——`mcp-builder`（11 文件 / 160 KiB，MCP 服务器开发指南，DSH 侧此前无对应能力）、`webapp-testing`（6 文件 / 22 KiB，Playwright 本地应用测试 + `scripts/with_server.py`）、`frontend-design`（2 文件 / 19 KiB，审美方向）、`pdf`（12 文件 / 69 KiB，pypdf / 表单 / OCR）。四者均按上游逐 blob 校验一致（共 31 文件 / 270 KiB），目录内保留 Apache-2.0 `LICENSE.txt`，**不生成摘要条**；`check:skills` → 21 篇通过，`skills/` 由 3 个增到 7 个。
+  - 同轮把 `official/` 里 6 条摘要条升级为**上游全文**（原位替换，目录名仍与 provider `SKILL_DIRS` 一致，`check:skills` 不变）：`superpowers`（上游无单体 skill，15 个 skill 全文归档 `reference/`，索引由 frontmatter 自动生成，80 文件 / 436 KiB）、`ponytail`（`ebd8654c`）、`officecli`（`fecece3e`）、`ui-ux-pro-max`（`f2f7266b`，81 文件 / 3.6 MiB）、`weiliaozi-skill`（`0f96cdcd`，8 文件 / 2.9 MiB）、`vision-liao-memory`（cognee `1961133d`）。**未镜像的 7 条及原因**：`taste-skill` 上游 34.9 MiB、`zerotoken-skill` 上游 GPL-3.0、`moon-lovers` 上游无 LICENSE、`bug-hunt`/`code-review`/`release-notes` 上游不存在、`github` 非 GitHub 仓库。
 
 ## 第三方内容与许可
 
@@ -190,6 +191,8 @@ npm 包里只有 `cordis.patch.yml` + `icon.webp` + `locale/*.json` + `skills/` 
 - `skills/chrome-extensions`、`skills/modern-web-guidance`：来自 <https://github.com/GoogleChrome/modern-web-guidance>（Apache-2.0），本地内容与上游 tag **v1.0.2** 逐字节对齐；`modern-web-guidance` 运行时还依赖上游 npm 包检索。
 - `skills/mcp-builder`、`skills/webapp-testing`、`skills/frontend-design`、`skills/pdf`：来自 <https://github.com/anthropics/skills>，**Apache-2.0**（每个目录内保留上游 `LICENSE.txt`），同步上游 `e4bb5d96`（2026-11-16）。四者上游均无 tag，只能跟提交。
 - `official/figma-design-skill`：来自 <https://github.com/phoenixlucky/figma-design-skill>，MIT，v2.16.0。
+- `official/` 里 6 条全文镜像的许可：`superpowers`（MIT）、`ponytail`（MIT）、`ui-ux-pro-max`（MIT）、`weiliaozi-skill`（MIT）、`officecli`（Apache-2.0，仓库根许可）、`vision-liao-memory`（Apache-2.0，cognee 仓库根许可）；`superpowers` 目录另存上游 `LICENSE`。
+- `official/zerotoken-skill` 保持摘要条：上游 **GPL-3.0**，全文并入本 MIT 仓库会带来传染性授权问题，仅以链接引用。
 - 其余 13 个 `official/<name>`：摘要条，上游与许可各见其 `source-url`（obra/superpowers、DietrichGebert/ponytail、Leonxlnx/taste-skill、nextlevelbuilder/ui-ux-pro-max-skill、iOfficeAI/OfficeCLI、topoteretes/cognee、clawhub.ai/steipete/github 及 phoenixlucky 自有仓库）。`bug-hunt`、`code-review`、`release-notes` 不在此列：它们原标注 anthropics/skills，经核实该仓库没有对应 skill，已撤掉无效的 `source-url`、改为 `source-note` 记待补，**来源未确认前不要当作 anthropics 内容分发**。
 
 仓库根的 `LICENSE` 只覆盖自有内容，不自动覆盖以上第三方部分。
