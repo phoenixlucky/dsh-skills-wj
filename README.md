@@ -10,7 +10,7 @@
 | --- | --- |
 | 仓库 | <https://github.com/phoenixlucky/dsh-skills-wj>（公开） |
 | 包 | npm [`@tinyforge/dsh-skills-wj`](https://www.npmjs.com/package/@tinyforge/dsh-skills-wj) |
-| 版本 | `1.2.5` |
+| 版本 | `1.2.6` |
 | 许可 | 自有内容 MIT；`figma-design-skill` 上游 MIT；`chrome-extensions`、`modern-web-guidance` 上游 Apache-2.0（GoogleChrome/modern-web-guidance） |
 | 最近更新 | 2026-11-24 |
 
@@ -182,8 +182,9 @@ npm 包里只有 `cordis.patch.yml` + `icon.webp` + `locale/*.json` + `skills/` 
 - **1.2.3**（2026-11-20）换图标、改显示名：`icon.webp` 换成新图（300×300 VP8X 带 alpha，35,466 B；源图圆角外是不透明深藏青 `#18376C`，已从四边连通域去成透明），`locale/zh.json` 的 `meta.title` 由「武库」改为 **WJ 武库**，`package.json` 的 `description` 前缀同步；英文回落仍为 `Skill arsenal`。
 - **1.2.4**（2026-11-21）README 徽章：标题下新增一排五枚 shields 徽章——许可证（取自 `package.json` 的 MIT）、npm 版本、npm 月下载、DSH Web Plugin、DSH 实测上限 **0.2.2-rc.5**（本包在 rc.5 宿主下挂载、`skills/` 三个 skill 已进会话目录）。纯文档改动，`skills/` 内容与挂载方式不变；npm 页面的 README 随本版同步。
 - **1.2.5**（2026-11-24）`modern-web-guidance` 同步上游 v1.0.2 + 摘要条来源事实修正：`modern-web-guidance` 同步到上游 tag **v1.0.2**——共 33 项差异：新增 `guides/ui-components/context-menu.md`、`guides/visual-design/teaser.md`，删除 `guides/visual-design/soft-edge-content-fade.md`，改写 31 项（30 篇 guides + `SKILL.md` 的检索版本标识 `2026_11_10-47b4c80e` → `2026_11_16-268fb9ea`）；现 212 文件 / 211 篇 guides，与上游 v1.0.2 逐 blob 比对 0 差异。`chrome-extensions` 在 v1.0.2 里该目录无变化，仍 24 文件一致。README 上游版本列同步：`officecli` v1.0.162 → **v1.0.163**，`ponytail` / `taste-skill` / `ui-ux-pro-max` / `vision-liao-memory` 的上游更新日期改为各自 HEAD（11-22 / 11-23 / 11-24 / 11-20）。**来源事实修正**：`bug-hunt`、`code-review`、`release-notes` 撤掉无效的 `source-url`（实测 anthropics/skills 的 `skills/` 下无这三个，改为 `source-note` 记待补）；`vision-liao-memory` 改指 cognee 的 `.agents/skills/` 并注明对应 `cognee-recall` / `cognee-improve-sessions`。纯内容与文档变更，`package.json` 版本随之升到 **1.2.5** 并随本版发布到 npm。
-- **未发布（2026-11-24，建议升 1.2.6）**：从 <https://github.com/anthropics/skills>（rev `e4bb5d96`）**全文镜像** 4 个 skill 到 `skills/`——`mcp-builder`（11 文件 / 160 KiB，MCP 服务器开发指南，DSH 侧此前无对应能力）、`webapp-testing`（6 文件 / 22 KiB，Playwright 本地应用测试 + `scripts/with_server.py`）、`frontend-design`（2 文件 / 19 KiB，审美方向）、`pdf`（12 文件 / 69 KiB，pypdf / 表单 / OCR）。四者均按上游逐 blob 校验一致（共 31 文件 / 270 KiB），目录内保留 Apache-2.0 `LICENSE.txt`，**不生成摘要条**；`check:skills` → 21 篇通过，`skills/` 由 3 个增到 7 个。
+- **1.2.6**（2026-11-24）新增 4 个 skill + `official/` 6 条升级为上游全文：从 <https://github.com/anthropics/skills>（rev `e4bb5d96`）**全文镜像** 4 个 skill 到 `skills/`——`mcp-builder`（11 文件 / 160 KiB，MCP 服务器开发指南，DSH 侧此前无对应能力）、`webapp-testing`（6 文件 / 22 KiB，Playwright 本地应用测试 + `scripts/with_server.py`）、`frontend-design`（2 文件 / 19 KiB，审美方向）、`pdf`（12 文件 / 69 KiB，pypdf / 表单 / OCR）。四者均按上游逐 blob 校验一致（共 31 文件 / 270 KiB），目录内保留 Apache-2.0 `LICENSE.txt`，**不生成摘要条**；`check:skills` → 21 篇通过，`skills/` 由 3 个增到 7 个。
   - 同轮把 `official/` 里 6 条摘要条升级为**上游全文**（原位替换，目录名仍与 provider `SKILL_DIRS` 一致，`check:skills` 不变）：`superpowers`（上游无单体 skill，15 个 skill 全文归档 `reference/`，索引由 frontmatter 自动生成，80 文件 / 436 KiB）、`ponytail`（`ebd8654c`）、`officecli`（`fecece3e`）、`ui-ux-pro-max`（`f2f7266b`，81 文件 / 3.6 MiB）、`weiliaozi-skill`（`0f96cdcd`，8 文件 / 2.9 MiB）、`vision-liao-memory`（cognee `1961133d`）。**未镜像的 7 条及原因**：`taste-skill` 上游 34.9 MiB、`zerotoken-skill` 上游 GPL-3.0、`moon-lovers` 上游无 LICENSE、`bug-hunt`/`code-review`/`release-notes` 上游不存在、`github` 非 GitHub 仓库。
+  - 本版只改内容与文档：`skills/` 3→7 个、`official/` 6 条换全文；`official/` 不进 npm，包体增量全部来自 `skills/`（275 文件 / 827,952 B）。版本号随本版升到 **1.2.6** 并发布到 npm。
 
 ## 第三方内容与许可
 
