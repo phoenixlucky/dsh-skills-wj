@@ -138,6 +138,13 @@
 
 - 2026-11-24 **决策（用户「就现在这样吧」）**：本轮到此为止，**不做结构性搬迁**（不把 `official/` 条目搬进 `skills/`、不改 `OFFICIAL_SKILLS`），**不发 1.2.6**（本地与 npm 都停在 1.2.5），剩余 7 条摘要条按已记的硬理由维持现状。仓库干净在 `909c106`。将来若要「装上就能用」那 6 条全文，再按上一轮记的搬移方案执行；`taste-skill`（35 MiB）/`zerotoken-skill`（GPL-3.0）/`moon-lovers`（无 LICENSE，用户自己的仓库补 LICENSE 即可）三条卡点未解。
 
+- 2026-11-24 第二十一轮（用户「上传 github，发布 npm」）：**1.2.6 已发布**——提交 `1ffe9c6`、annotated tag `v1.2.6` 已推 `main`；`npm publish` 成功（`+ @tinyforge/dsh-skills-wj@1.2.6`，日志 `http fetch PUT 202`，`G:\caches\npm\_logs\2026-11-24T06_39_34_039Z-debug-0.log` 第 32 行）。
+  - 包体实测：**275 文件 / 828,037 B / 解包 2,574,362 B / sha1 `1d8d1e22dd9d25f7c75ab29a42e75a2181ea11f7`**，与发布输出逐位一致；`official/` 不进包（`files` 不含），增量全部来自 `skills/`。
+  - 传播实测：PUT 06:39:34Z → `dist-tags.latest` 06:42:47Z 变 1.2.6，**约 3 分 13 秒**（连续两轮都是 3 分上下，可作预期值）。
+  - 从 registry 反向核验（`.tmp/verify-registry2.mjs`）：tarball 828,037 B、sha1 = `dist.shasum`、275 条目；包内 README 20,833 B 且含「版本 1.2.6」行与 1.2.6 变更条；`skills/` 7 个目录 = chrome-extensions、frontend-design、mcp-builder、modern-web-guidance、pdf、webapp-testing、zuowang-skill；`official/` 不在包内；`package.json` 1.2.6。
+  - 过程坑（新）：`npm pack` 与 `npm publish` 的 shasum 会因 `package.json` 的 CRLF/LF 不同而不同——本轮 dry-run 先给出 `81e0ec95`，把 `package.json` 归一化为 CRLF 后再 dry-run 得 `1d8d1e22`，与实际发布值一致。**发布前应在 EOL 归一化之后再做 dry-run 取 shasum**，否则会误判"包内容被改动"。另：`git status` 在 `core.autocrlf=true` 下可能把 `package.json` 显示为 M 但 `git diff` 为空（blob 哈希相同，纯 stat 脏），`git add` 一次即消失。
+  - 未做：桌面 profile 仍是旧版（要看到 1.2.6 需 `dsh plugin --profile desktop add @tinyforge/dsh-skills-wj@1.2.6 --save-exact`）；GitHub Release `v1.2.6` 未建（tag 已在远端）。
+
 ## 待确认
 
 - ~~是否把本地目录初始化为 git 仓库并配置 remote，改为常规 `git push` 发布~~ **已解决（2026-11-18 第八轮）**：本地本来就是 git 仓库（6 提交、分支 `master`、无 remote），已补 `origin=https://github.com/phoenixlucky/dsh-skills-wj.git`、改名 `main`、合并网页端历史后推送；`git` 2.56.1 与 `gh` 2.93.0 都在 PATH。
