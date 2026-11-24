@@ -120,6 +120,13 @@
   - **推荐加入（Apache-2.0、无同名冲突、无平台锁定）**：`mcp-builder`（155 KiB，DSH 本身以 MCP 扩展，零重叠）、`webapp-testing`（22 KiB，Playwright 本地测试 + `scripts/with_server.py`，catalog 只有 ego-browser 无测试流程）、`frontend-design`（19 KiB，审美方向，与 spec 类设计 skill 互补）、可选 `pdf`（67 KiB，与 officecli 部分重叠但补 pypdf/表单细节）。合计约 263 KiB，npm 包 2.3 MB → 约 2.5 MB。
   - 未执行导入：等用户圈定范围。
 
+- 2026-11-24 第十九轮（用户「我不要摘要条，直接同步」）：**anthropics/skills 的 4 个 skill 已全文镜像进 `skills/`**，提交 `a718f1b` 已推 `main`（未打 tag、未发 npm，`package.json` 仍 1.2.5，README 记「未发布，建议升 1.2.6」）。
+  - 范围与体积（上游 rev `e4bb5d96`，一律钉这个提交）：`mcp-builder` 11 文件 / 159.6 KiB（SKILL.md + `reference/` 5 篇 + `scripts/` 4 个）、`webapp-testing` 6 / 22.4 KiB（+ `scripts/with_server.py`、`examples/` 3 个）、`frontend-design` 2 / 19.3 KiB、`pdf` 12 / 69.0 KiB（`REFERENCE.md`、`FORMS.md`、`scripts/` 8 个 py）。合计 **31 文件 / 270.3 KiB**。
+  - 做法：`.tmp/sync-anthropics.mjs` 按上游 tree 逐文件拉取 → 写入时 LF→CRLF → **落盘后再次逐文件重算 blob sha 与上游比对**（不一致即抛错），四个目录均自带 `LICENSE.txt`（Apache-2.0）一并镜像；**没有生成任何摘要条**，`official/` 未动（仍是 14 条 + 硬编码校验）。
+  - 验收：`check:skills` → **`OK 21 skill document(s) valid`**（17→21）；`npm pack --dry-run` → **275 文件 / 827,266 B / 解包 2,572,082 B**（上版 244 / 749,215 / 2,293,289），4 份 `LICENSE.txt` 均在包内；宿主 skill catalog 当场刷新出现 `mcp-builder`/`webapp-testing`/`frontend-design`/`pdf`，说明 mount 与 frontmatter 解析都通过——这是比静态校验更强的证据。
+  - README 同步：概述与「两个根分工」的 `skills/` 数量 3→7、结构图补 4 行（写清 `reference/` 与 `examples/` 实际文件名）、`skills/` 表补 4 行（来源 anthropics/skills、无 tag rev `e4bb5d96`、2026-11-16、与上游一致）、第三方许可节补 Apache-2.0 条目、变更日志加「未发布（建议 1.2.6）」。
+  - 待办：发 1.2.6 时按既定顺序（改 version → commit → tag → 双 push → publish），桌面 profile 一并升。
+
 ## 待确认
 
 - ~~是否把本地目录初始化为 git 仓库并配置 remote，改为常规 `git push` 发布~~ **已解决（2026-11-18 第八轮）**：本地本来就是 git 仓库（6 提交、分支 `master`、无 remote），已补 `origin=https://github.com/phoenixlucky/dsh-skills-wj.git`、改名 `main`、合并网页端历史后推送；`git` 2.56.1 与 `gh` 2.93.0 都在 PATH。
