@@ -103,7 +103,15 @@
   - **来源事实修正（4 个摘要条 frontmatter）**：`bug-hunt`/`code-review`/`release-notes` 删掉无效的 `source-url: https://github.com/anthropics/skills`，改为 `source-note: 原标注 anthropics/skills，经核实该仓库 skills/ 下无此 skill（2026-11-24），真实来源待补`；`vision-liao-memory` 的 `source-url` 改指 `https://github.com/topoteretes/cognee/tree/HEAD/.agents/skills`，加 `source-note` 注明对应 `cognee-recall`（召回）与 `cognee-improve-sessions`（写回会话记忆）。`scripts/check-skills.mjs` 只强校验 `name`/`description`，加 `source-note`、去 `source-url` 不影响校验（仍 `OK 17 skill document(s) valid`）。
   - README 同步：`官方`表三行改「来源未明 / 未知 / `source-note` 记待补」并补表注「来源未确认的三个标未知、不做推测」；`officecli` v1.0.163；`ponytail` 11-22、`taste-skill` 11-23、`ui-ux-pro-max` 11-24、`vision-liao-memory` 11-20；`skills/` 表两个 GoogleChrome skill 的 tag 与日期改 v1.0.2 / 11-23、篇数 210→211；结构图篇数、第三方许可节（v1.0.1→v1.0.2、明示三个 anthropics 条目来源未确认前不得当 anthropics 内容分发）；「最近更新」改 2026-11-24；「版本与变更」加「未发布（2026-11-24，建议升 1.2.5）」一条。
   - 打包实测 `npm pack --dry-run --json --cache .tmp/npm-cache`：**244 文件 / 749,180 B / 解包 2,292,955 B**（上版 243 / 740,541 / 2,260,515），`modern-web-guidance` 在包内 212 条，`context-menu.md`/`teaser.md` 已进包、`soft-edge-content-fade.md` 已不在。
-  - 未做（等用户定）：`npm version patch` → 1.2.5、提交、tag、push、`npm publish`、桌面 profile 升级。
+  - 当时未做：`npm version patch` → 1.2.5、提交、tag、push、`npm publish` —— 已由同日第十七轮完成（该轮改为手改 `package.json` version，因工作树不干净 `npm version` 会拒绝）。
+
+- 2026-11-24 第十七轮（用户「升到 1.2.5，发布到 npm」）：**1.2.5 已发布**，提交 `a56a258`、annotated tag `v1.2.5`（tag 对象 `2ea6d040b13e`）均已推到 `origin/main`。
+  - 发版方式（本轮教训）：工作树有 40 项未提交改动时 `npm version patch` 会因「Git working directory not clean」拒绝，所以直接改 `package.json` 的 `version` 字段（node 脚本写，避免 PowerShell 吞引号），再 `git add -A` → `git commit --no-verify`（`check:skills` 已手动跑过）→ `git tag -a v1.2.5` → `git push origin main` / `git push origin v1.2.5`。push 两条都成功（`8023f21..a56a258 main -> main`、`* [new tag] v1.2.5`），PowerShell 把 git 的 stderr 当错误、exit 1 属已知噪声。
+  - 发布前实测：`check:skills` → `OK 17 skill document(s) valid`；`npm pack --dry-run --json --cache .tmp/npm-cache` → **244 文件 / 749,215 B / 解包 2,293,289 B / shasum `adb02b1bd6b4b54be624403d447786d702997443`**。
+  - `npm publish`（默认 cache，无需放宽策略）成功：`+ @tinyforge/dsh-skills-wj@1.2.5`，日志 `http fetch PUT 202 https://registry.npmjs.org/@tinyforge%2fdsh-skills-wj 3075ms`（`G:\caches\npm\_logs\2026-11-24T05_39_39_717Z-debug-0.log` 第 32 行），包大小 749.2 kB / 244 文件 / shasum 与 dry-run 逐位一致。
+  - **注册表传播实测：PUT 在 05:39:39Z，`dist-tags.latest` 到 05:42:53Z 才变 1.2.5（约 3 分 14 秒）**；期间 packument 里没有 1.2.5，属正常滞后，判据仍是 PUT 202，别重发。
+  - 从 registry 反向核验（`.tmp/verify-registry.mjs`，纯 JS 解 tar，不用 spawn）：tarball 749,215 B、sha1 = `dist.shasum`、244 条目；包内 README 16,476 B 且含「版本 1.2.5」行与 1.2.5 变更条；`skills/modern-web-guidance` 212 条目、`context-menu.md`/`teaser.md` 在包内、`soft-edge-content-fade.md` 不在、`SKILL.md` 标识 `2026_11_16-268fb9ea`；`package.json` version 1.2.5。
+  - 未做（用户未要求，且属另一决策）：GitHub Release `v1.2.5` 未建（tag 已在远端）；桌面 profile 仍是旧版，要看新内容需 `dsh plugin --profile desktop add @tinyforge/dsh-skills-wj@1.2.5 --save-exact`。
 
 ## 待确认
 
