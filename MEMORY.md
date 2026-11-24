@@ -136,6 +136,8 @@
 
 - 2026-11-24 同日补记：`official/` 各目录实测体积（KiB）——figma 82.0、superpowers 440.9、ui-ux-pro-max 3701.5、weiliaozi 2912.6、officecli 25.9、vision-liao-memory 28.0、ponytail 3.6，其余 7 个各 0.4–0.5（纯摘要条）。
 
+- 2026-11-24 **决策（用户「就现在这样吧」）**：本轮到此为止，**不做结构性搬迁**（不把 `official/` 条目搬进 `skills/`、不改 `OFFICIAL_SKILLS`），**不发 1.2.6**（本地与 npm 都停在 1.2.5），剩余 7 条摘要条按已记的硬理由维持现状。仓库干净在 `909c106`。将来若要「装上就能用」那 6 条全文，再按上一轮记的搬移方案执行；`taste-skill`（35 MiB）/`zerotoken-skill`（GPL-3.0）/`moon-lovers`（无 LICENSE，用户自己的仓库补 LICENSE 即可）三条卡点未解。
+
 ## 待确认
 
 - ~~是否把本地目录初始化为 git 仓库并配置 remote，改为常规 `git push` 发布~~ **已解决（2026-11-18 第八轮）**：本地本来就是 git 仓库（6 提交、分支 `master`、无 remote），已补 `origin=https://github.com/phoenixlucky/dsh-skills-wj.git`、改名 `main`、合并网页端历史后推送；`git` 2.56.1 与 `gh` 2.93.0 都在 PATH。
